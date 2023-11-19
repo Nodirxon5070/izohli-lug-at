@@ -27,4 +27,9 @@ public class Note {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "word_id",insertable = false,updatable = false)
+    private Word word;
 }

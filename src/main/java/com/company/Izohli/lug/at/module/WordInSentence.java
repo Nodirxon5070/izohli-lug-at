@@ -19,11 +19,19 @@ public class WordInSentence {
     private Integer wordInSentenceId;
 
     private Integer wordId;
-    private Integer sentence;
+    private Integer sentenceId;
     private Integer order;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "word_id",insertable = false,updatable = false)
+    private Word word;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "sentence",insertable = false,updatable = false)
+    private Sentence sentence;
 
 }

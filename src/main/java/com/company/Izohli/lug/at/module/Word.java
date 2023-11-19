@@ -29,6 +29,16 @@ public class Word {
     private Integer numLike;
     private Integer numShare;
 
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "audio_id",insertable = false,updatable = false)
+    private Audio audio;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id",insertable = false,updatable = false)
+    private Category category;
+
+
     @OneToMany(mappedBy = "wordId",
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)

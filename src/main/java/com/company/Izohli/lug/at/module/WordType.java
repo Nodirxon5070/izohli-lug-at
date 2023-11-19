@@ -21,6 +21,16 @@ public class WordType {
 
     private Integer typeId;
     private Integer wordId;
+    private int[] wordIds;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "type_id",insertable = false,updatable = false)
+    private Type type;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "word_id",insertable = false,updatable = false)
+    private Word word;
+
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -21,6 +21,10 @@ public class DayWord {
     private Integer dayWordId;
     private Integer wordId;
 
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "word_id",insertable = false,updatable = false)
+    private Word word;
+
     private Date date;
 
     private LocalDateTime createdAt;
