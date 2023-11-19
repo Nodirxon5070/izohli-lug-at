@@ -20,5 +20,5 @@ public abstract class WordMapper {
     public abstract WordDto toDto(Word word);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,resultType = Word.class)
-    public abstract Word updateType(RequestWordDto dto, @MappingTarget Word word);
+    public abstract Word updateWord(RequestWordDto dto, @MappingTarget Word word);
 }

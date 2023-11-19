@@ -17,7 +17,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class TypeDto {
     private Integer typeId;
-    @NotBlank(message = "Name cannot be null or empty")
     private String name;
     private Integer order;
 

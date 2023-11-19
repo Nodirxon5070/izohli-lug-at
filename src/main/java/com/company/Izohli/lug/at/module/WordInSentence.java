@@ -31,7 +31,7 @@ public class WordInSentence {
     private Word word;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "sentence",insertable = false,updatable = false)
+    @JoinColumn(name = "sentence_id",insertable = false,updatable = false)
     private Sentence sentence;
 
 }

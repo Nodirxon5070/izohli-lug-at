@@ -1,8 +1,11 @@
 package com.company.Izohli.lug.at.validation;
 
 import com.company.Izohli.lug.at.dto.ErrorDto;
+import com.company.Izohli.lug.at.dto.requestDto.RequestWordTypeDto;
 import com.company.Izohli.lug.at.dto.responseDto.WordInSentenceDto;
 import com.company.Izohli.lug.at.dto.responseDto.WordTypeDto;
+import com.company.Izohli.lug.at.repository.TypeRepository;
+import com.company.Izohli.lug.at.repository.WordRepository;
 import com.company.Izohli.lug.at.repository.WordTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -13,12 +16,16 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class WordTypeValidation {
-    private final WordTypeRepository wordTypeRepository;
+    private final TypeRepository typeRepository;
+    private final WordRepository wordRepository;
 
-    public List<ErrorDto> wordTypeSentenceValid(WordTypeDto dto) {
+    public List<ErrorDto> wordTypeValid(RequestWordTypeDto dto) {
         List<ErrorDto> errorList = new ArrayList<>();
-        if (this.wordTypeRepository.findByWordTypeIdAndDeletedAtIsNull(dto.getWordTypeId()).isEmpty()) {
-            errorList.add(new ErrorDto("wordTypeId", String.format("wordTypeId with %d:id is not found!", dto.getWordTypeId())));
+        if (this.typeRepository.findByTypeIdAndDeletedAtIsNull(dto.getTypeId()).isEmpty()) {
+            errorList.add(new ErrorDto("typeId", String.format("typeId with %d:id is not found!", dto.getTypeId())));
+        }
+        if (this.wordRepository.findByWordIdAndDeletedAtIsNull(dto.getWordId()).isEmpty()) {
+            errorList.add(new ErrorDto("wordId", String.format("wordId with %d:id is not found!", dto.getWordId())));
         }
         return errorList;
     }

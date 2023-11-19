@@ -18,7 +18,6 @@ import java.util.Set;
 public class SentenceDto {
     private Integer sentenceId;
 
-    @NotBlank(message = "Content cannot be null or empty")
     private String content;
 
     private Set<WordInSentence> wordInSentences;

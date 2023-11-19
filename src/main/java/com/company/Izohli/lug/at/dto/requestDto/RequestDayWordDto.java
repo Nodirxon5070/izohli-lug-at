@@ -11,4 +11,5 @@ import java.util.Date;
 @AllArgsConstructor
 public class RequestDayWordDto {
     private Date date;
+    private Integer wordId;
 }

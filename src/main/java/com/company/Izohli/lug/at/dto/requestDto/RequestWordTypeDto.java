@@ -13,5 +13,6 @@ public class RequestWordTypeDto {
 
     private Integer typeId;
     private Integer wordId;
+    private int[] wordIds;
 
 }

@@ -14,7 +14,6 @@ public class WordInSentenceDto {
     private Integer wordInSentenceId;
 
     private Integer wordId;
-    @NotBlank(message = "Sentence cannot be null or empty")
     private Integer sentence;
     private Integer order;
 

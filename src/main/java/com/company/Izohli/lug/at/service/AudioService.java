@@ -5,6 +5,7 @@ import com.company.Izohli.lug.at.dto.ResponseDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
 import com.company.Izohli.lug.at.mapper.AudioMapper;
+import com.company.Izohli.lug.at.module.Audio;
 import com.company.Izohli.lug.at.repository.AudioRepository;
 import com.company.Izohli.lug.at.utill.SimpleCrud;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,21 @@ public class AudioService implements SimpleCrud<Integer, RequestAudioDto, AudioD
 
     @Override
     public ResponseDto<AudioDto> createEntity(RequestAudioDto dto) {
-        return null;
+        try {
+            Audio audio=this.audioMapper.toEntity(dto);
+            return ResponseDto.<AudioDto>builder()
+                    .success(true)
+                    .message("Ok")
+                    .data(this.audioMapper.toDto(
+                            this.audioRepository.save(audio)
+                    ))
+                    .build();
+        }catch (Exception e) {
+            return ResponseDto.<AudioDto>builder()
+                    .code(-2)
+                    .message(String.format("Audio while saving error"))
+                    .build();
+        }
     }
 
     @Override

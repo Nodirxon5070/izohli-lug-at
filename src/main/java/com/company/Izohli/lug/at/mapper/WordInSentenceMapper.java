@@ -20,5 +20,5 @@ public abstract class WordInSentenceMapper {
     public abstract WordInSentenceDto toDto(WordInSentence wordInSentence);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,resultType = WordInSentence.class)
-    public abstract Audio updateWordInSentence(RequestWordInSentenceDto dto, @MappingTarget WordInSentence wordInSentence);
+    public abstract WordInSentence updateWordInSentence(RequestWordInSentenceDto dto, @MappingTarget WordInSentence wordInSentence);
 }
