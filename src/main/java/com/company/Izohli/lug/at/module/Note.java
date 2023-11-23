@@ -18,6 +18,7 @@ public class Note {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer noteId;
 
+    @Column(name = "word_id")
     private Integer wordId;
 
     private String title;

@@ -18,7 +18,11 @@ public class WordInSentence {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer wordInSentenceId;
 
+    @Column(name = "word_id")
+
     private Integer wordId;
+
+    @Column(name = "sentence_id")
     private Integer sentenceId;
     private Integer order;
 

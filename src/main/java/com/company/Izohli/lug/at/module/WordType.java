@@ -19,7 +19,10 @@ public class WordType {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer wordTypeId;
 
+    @Column(name = "type_id")
     private Integer typeId;
+
+    @Column(name = "word_id")
     private Integer wordId;
     private int[] wordIds;
 

@@ -19,6 +19,7 @@ public class DayWord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer dayWordId;
+    @Column(name = "word_id")
     private Integer wordId;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)

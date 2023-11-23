@@ -22,7 +22,10 @@ public class Word {
     private String label;
     private String transcript;
 
+    @Column(name = "category_id")
     private Integer categoryId;
+
+    @Column(name = "audio_id")
     private Integer audioId;
 
     private Integer numView;
