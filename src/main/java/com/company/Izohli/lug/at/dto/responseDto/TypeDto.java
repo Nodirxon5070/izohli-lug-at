@@ -18,7 +18,7 @@ import java.util.Set;
 public class TypeDto {
     private Integer typeId;
     private String name;
-    private Integer order;
+    private Integer orders;
 
     private Set<WordType> wordType;
 

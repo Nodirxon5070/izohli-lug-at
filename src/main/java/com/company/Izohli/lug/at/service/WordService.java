@@ -58,7 +58,7 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
                 .map(word ->ResponseDto.<WordDto>builder()
                         .success(true)
                         .message("Ok")
-                        .data(this.wordMapper.toDto(word))
+                        .data(this.wordMapper.toDtoWithAll(word))
                         .build())
                 .orElse(ResponseDto.<WordDto>builder()
                         .code(-1)

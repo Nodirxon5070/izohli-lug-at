@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring",imports = Collectors.class)
 public abstract class TypeMapper {
+
     public abstract Type toEntity(RequestTypeDto dto);
 
     public abstract TypeDto toDto(Type type);

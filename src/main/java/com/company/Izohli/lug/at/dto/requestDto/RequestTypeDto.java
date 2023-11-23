@@ -16,8 +16,7 @@ import java.util.Set;
 public class RequestTypeDto {
     @NotBlank(message = "Name cannot be null or empty")
     private String name;
-    @NotNull(message = "Order cannot be null or empty")
-    private Integer order;
+    @NotNull(message = "Orders cannot be null or empty")
+    private Integer orders;
 
-    private Set<WordTypeDto> wordType;
 }

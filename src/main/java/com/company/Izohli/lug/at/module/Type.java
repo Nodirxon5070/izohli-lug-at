@@ -19,7 +19,7 @@ public class Type {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer typeId;
     private String name;
-    private Integer order;
+    private Integer orders;
 
     @OneToMany(mappedBy = "typeId",
             fetch = FetchType.EAGER,

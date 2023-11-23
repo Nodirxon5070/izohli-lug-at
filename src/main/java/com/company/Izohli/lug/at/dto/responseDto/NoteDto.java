@@ -1,5 +1,6 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
+import com.company.Izohli.lug.at.module.Word;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -17,6 +18,8 @@ public class NoteDto {
     private String title;
     private String description;
     private String source;
+
+    private WordDto word;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

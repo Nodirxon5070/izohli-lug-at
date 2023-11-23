@@ -15,5 +15,4 @@ import java.util.Set;
 public class RequestAudioDto {
     @NotBlank(message = "Path cannot be null or empty")
     private String path;
-    private Set<WordDto> words;
 }

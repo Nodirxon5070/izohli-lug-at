@@ -16,5 +16,4 @@ public class RequestSentenceDto {
     @NotBlank(message = "Content cannot be null or empty")
     private String content;
 
-    private Set<WordInSentenceDto> wordInSentences;
 }

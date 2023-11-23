@@ -17,5 +17,4 @@ public class RequestCategoryDto {
     private String name;
     private String description;
 
-    private Set<WordDto> words;
 }

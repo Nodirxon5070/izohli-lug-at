@@ -36,7 +36,7 @@ public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, 
         } catch (Exception e) {
             return ResponseDto.<CategoryDto>builder()
                     .code(-2)
-                    .message(String.format("Category while saving error",e.getMessage()))
+                    .message(String.format("Category while saving error %s",e.getMessage()))
                     .build();
         }
     }

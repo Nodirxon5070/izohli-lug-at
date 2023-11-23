@@ -33,7 +33,7 @@ public class AudioService implements SimpleCrud<Integer, RequestAudioDto, AudioD
         }catch (Exception e) {
             return ResponseDto.<AudioDto>builder()
                     .code(-2)
-                    .message(String.format("Audio while saving error"))
+                    .message(String.format("Audio while saving error %s",e.getMessage()))
                     .build();
         }
     }

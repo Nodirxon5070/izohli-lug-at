@@ -28,6 +28,8 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
 
     @Override
     public ResponseDto<DayWordDto> createEntity(RequestDayWordDto dto) {
+        DayWord dayWord = this.dayWordMapper.toEntity(dto);
+        dayWord.setCreatedAt(LocalDateTime.now());
         List<ErrorDto> errors;
         errors = this.dayWordValidation.dayWordValid(dto);
         if (!errors.isEmpty()) {
@@ -41,9 +43,8 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
             return ResponseDto.<DayWordDto>builder()
                     .success(true)
                     .message("Ok")
-                    .data(this.dayWordMapper.toDto(
-                            this.dayWordRepository.save(
-                                    this.dayWordMapper.toEntity(dto))
+                    .data(this.dayWordMapper.toDtoWithWord(
+                            this.dayWordRepository.save(dayWord)
                     ))
                     .build();
 
@@ -61,7 +62,7 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
                 .map(dayWord ->  ResponseDto.<DayWordDto>builder()
                         .success(true)
                         .message("OK")
-                        .data(this.dayWordMapper.toDto(dayWord))
+                        .data(this.dayWordMapper.toDtoWithWord(dayWord))
                         .build())
                 .orElse(ResponseDto.<DayWordDto>builder()
                         .code(-1)
@@ -74,14 +75,14 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
         try {
             return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
                     .map(dayWord -> ResponseDto.<DayWordDto>builder()
-                            .success(true)
-                            .message("OK")
-                            .data(this.dayWordMapper.toDto(
-                                    this.dayWordRepository.save(
-                                            this.dayWordMapper.updateDayWord(entity, dayWord)
-                                    )
-                            ))
-                            .build())
+                                .success(true)
+                                .message("OK")
+                                .data(this.dayWordMapper.toDto(
+                                        this.dayWordRepository.save(
+                                                this.dayWordMapper.updateDayWord(entity, dayWord)
+                                        )
+                                ))
+                                .build())
                     .orElse(ResponseDto.<DayWordDto>builder()
                             .code(-1)
                             .message(String.format("DayWord with %d id is not found", entityId))
