@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public abstract class DayWordMapper {
 
     @Autowired
-    private WordMapper wordMapper;
+    protected WordMapper wordMapper;
 
     public abstract DayWord toEntity(RequestDayWordDto dto);
 
