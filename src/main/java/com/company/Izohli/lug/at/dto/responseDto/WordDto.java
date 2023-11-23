@@ -1,15 +1,13 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
-import com.company.Izohli.lug.at.module.DayWord;
-import com.company.Izohli.lug.at.module.Note;
-import com.company.Izohli.lug.at.module.WordInSentence;
-import com.company.Izohli.lug.at.module.WordType;
+import com.company.Izohli.lug.at.module.*;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Set;
 
 @Getter
@@ -29,13 +27,16 @@ public class WordDto {
     private Integer numLike;
     private Integer numShare;
 
-    private Set<WordType> wordType;
+    private CategoryDto category;
+    private AudioDto audio;
 
-    private Set<Note> notes;
+    private Set<WordTypeDto> wordType;
 
-    private Set<WordInSentence> wordInSentences;
+    private Set<NoteDto> notes;
 
-    private Set<DayWord> dayWords;
+    private Set<WordInSentenceDto> wordInSentences;
+
+    private Set<DayWordDto> dayWords;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

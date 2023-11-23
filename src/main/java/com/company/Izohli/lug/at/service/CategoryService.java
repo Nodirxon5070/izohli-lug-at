@@ -52,7 +52,7 @@ public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, 
         return ResponseDto.<CategoryDto>builder()
                 .success(true)
                 .message("Ok")
-                .data(this.categoryMapper.toDto(optional.get()))
+                .data(this.categoryMapper.toDtoWithWord(optional.get()))
                 .build();
     }
 

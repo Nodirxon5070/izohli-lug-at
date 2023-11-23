@@ -35,7 +35,7 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
             return ResponseDto.<WordTypeDto>builder()
                     .success(true)
                     .message("Ok")
-                    .data(this.wordTypeMapper.toDto(
+                    .data(this.wordTypeMapper.toDtoWithWord(
                             this.wordTypeRepository.save(
                                     this.wordTypeMapper.toEntity(dto)
                             )
@@ -55,7 +55,7 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
                 .map(wordType -> ResponseDto.<WordTypeDto>builder()
                         .success(true)
                         .message("Ok")
-                        .data(this.wordTypeMapper.toDto(wordType))
+                        .data(this.wordTypeMapper.toDtoWithWord(wordType))
                         .build())
                 .orElse(ResponseDto.<WordTypeDto>builder()
                         .code(-1)

@@ -37,7 +37,7 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
             return ResponseDto.<WordInSentenceDto>builder()
                     .success(true)
                     .message("Ok")
-                    .data(this.wordInSentenceMapper.toDto(
+                    .data(this.wordInSentenceMapper.toDtoWithWord(
                             this.wordInSentenceRepository.save(
                                     this.wordInSentenceMapper.toEntity(dto)
                             )
@@ -57,7 +57,7 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
                 .map(wordInSentence ->  ResponseDto.<WordInSentenceDto>builder()
                         .success(true)
                         .message("Ok")
-                        .data(this.wordInSentenceMapper.toDto(wordInSentence))
+                        .data(this.wordInSentenceMapper.toDtoWithWord(wordInSentence))
                         .build())
                 .orElse(ResponseDto.<WordInSentenceDto>builder()
                         .code(-1)

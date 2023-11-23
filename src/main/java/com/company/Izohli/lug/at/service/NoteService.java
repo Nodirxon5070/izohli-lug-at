@@ -2,10 +2,7 @@ package com.company.Izohli.lug.at.service;
 
 import com.company.Izohli.lug.at.dto.ErrorDto;
 import com.company.Izohli.lug.at.dto.ResponseDto;
-import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestNoteDto;
-import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
-import com.company.Izohli.lug.at.dto.responseDto.DayWordDto;
 import com.company.Izohli.lug.at.dto.responseDto.NoteDto;
 import com.company.Izohli.lug.at.mapper.NoteMapper;
 import com.company.Izohli.lug.at.module.Note;
@@ -17,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +38,7 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
             return ResponseDto.<NoteDto>builder()
                     .success(true)
                     .message("Ok")
-                    .data(this.noteMapper.toDto(
+                    .data(this.noteMapper.toDtoWithWord(
                             this.noteRepository.save(note)
                     ))
                     .build();
@@ -50,7 +46,7 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
         }catch (Exception e){
             return ResponseDto.<NoteDto>builder()
                     .code(-2)
-                    .message(String.format("Note while saving error",e.getMessage()))
+                    .message(String.format("Note while saving error %s",e.getMessage()))
                     .build();
         }
         }
@@ -61,7 +57,7 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
                 .map(note ->ResponseDto.<NoteDto>builder()
                         .success(true)
                         .message("Ok")
-                        .data(this.noteMapper.toDto(note))
+                        .data(this.noteMapper.toDtoWithWord(note))
                         .build())
                 .orElse(ResponseDto.<NoteDto>builder()
                         .code(-1)

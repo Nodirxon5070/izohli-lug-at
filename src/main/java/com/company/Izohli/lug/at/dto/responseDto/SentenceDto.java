@@ -20,7 +20,7 @@ public class SentenceDto {
 
     private String content;
 
-    private Set<WordInSentence> wordInSentences;
+    private Set<WordInSentenceDto> wordInSentences;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

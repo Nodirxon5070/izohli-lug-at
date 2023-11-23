@@ -16,6 +16,7 @@ public class WordTypeDto {
 
     private Integer typeId;
     private Integer wordId;
+    private int[] wordIds;
 
     private TypeDto type;
 

@@ -20,7 +20,7 @@ public class CategoryDto {
     private String name;
     private String description;
 
-    private Set<Word> words;
+    private Set<WordDto> words;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

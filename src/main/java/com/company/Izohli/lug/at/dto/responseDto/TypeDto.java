@@ -20,7 +20,7 @@ public class TypeDto {
     private String name;
     private Integer orders;
 
-    private Set<WordType> wordType;
+    private Set<WordTypeDto> wordType;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

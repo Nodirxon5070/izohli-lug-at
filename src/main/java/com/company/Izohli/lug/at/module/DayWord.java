@@ -22,13 +22,13 @@ public class DayWord {
     @Column(name = "word_id")
     private Integer wordId;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "word_id",insertable = false,updatable = false)
-    private Word word;
-
     private Date date;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
+
+    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JoinColumn(name = "word_id",insertable = false,updatable = false)
+    private Word word;
 }
