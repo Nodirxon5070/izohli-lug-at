@@ -1,6 +1,26 @@
 package com.company.Izohli.lug.at.constants;
 
 public class SwaggerConstants {
+
+    public static final String EXAMPLE_AUDIO_SUCCESS = """
+            {
+                 "success":"true",
+                 "code":"0",
+                 "message":"OK",
+                 "data": {
+                    "categoryName":"Value..."
+                 }
+            }
+            """;
+
+    public static final String EXAMPLE_AUDIO_NOT_FOUND = """
+            {
+                 "success":"false",
+                 "code":"-1",
+                 "message":"Category is not found!"
+            }
+            """;
+
     public static final String EXAMPLE_CATEGORY_SUCCESS = """
             {
                  "success":"true",
@@ -148,7 +168,7 @@ public class SwaggerConstants {
             }
             """;
 
-    public static final String EXAMPLE_WORD_TYPE_FOUND = """
+    public static final String EXAMPLE_WORD_TYPE_NOT_FOUND = """
             {
                  "success":"false",
                  "code":"-1",
