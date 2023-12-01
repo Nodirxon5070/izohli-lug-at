@@ -1,6 +1,5 @@
 package com.company.Izohli.lug.at.dto;
 
-import lombok.*;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 

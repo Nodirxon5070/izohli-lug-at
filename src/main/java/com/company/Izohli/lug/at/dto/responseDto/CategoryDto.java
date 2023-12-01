@@ -1,9 +1,5 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
-import com.company.Izohli.lug.at.module.Word;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -21,8 +17,4 @@ public class CategoryDto {
     private String description;
 
     private Set<WordDto> words;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 }

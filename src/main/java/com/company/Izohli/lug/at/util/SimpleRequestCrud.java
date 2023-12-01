@@ -1,4 +1,4 @@
-package com.company.Izohli.lug.at.utill;
+package com.company.Izohli.lug.at.util;
 
 import com.company.Izohli.lug.at.dto.ResponseDto;
 import org.springframework.http.ResponseEntity;

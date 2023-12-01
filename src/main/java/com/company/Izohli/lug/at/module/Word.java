@@ -18,6 +18,7 @@ import java.util.Set;
 public class Word {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "word_id")
     private Integer wordId;
     private String label;
     private String transcript;
@@ -33,8 +34,7 @@ public class Word {
     private Integer numShare;
 
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "audio_id",insertable = false,updatable = false)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Audio audio;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 @Getter
 @Setter
@@ -13,10 +12,11 @@ import java.util.ArrayList;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "wordType")
+@Table(name = "word_type")
 public class WordType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "word_type_id")
     private Integer wordTypeId;
 
     @Column(name = "type_id")
@@ -26,8 +26,7 @@ public class WordType {
     private Integer wordId;
     private int[] wordIds;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "type_id",insertable = false,updatable = false)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Type type;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)

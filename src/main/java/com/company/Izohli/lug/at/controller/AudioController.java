@@ -1,10 +1,8 @@
 package com.company.Izohli.lug.at.controller;
 
 import com.company.Izohli.lug.at.dto.ResponseDto;
-import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
 import com.company.Izohli.lug.at.service.AudioService;
-import com.company.Izohli.lug.at.utill.SimpleRequestCrud;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import static com.company.Izohli.lug.at.constants.SwaggerConstants.EXAMPLE_AUDIO_NOT_FOUND;
 import static com.company.Izohli.lug.at.constants.SwaggerConstants.EXAMPLE_AUDIO_SUCCESS;
@@ -20,10 +19,9 @@ import static com.company.Izohli.lug.at.dto.SimpleResponseDto.convertStatusCodeB
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "audio")
-public class AudioController implements SimpleRequestCrud<Integer, RequestAudioDto, AudioDto> {
+public class AudioController {
 
     private final AudioService audioService;
-    @Override
     @ApiResponses(value={
             @ApiResponse(
                     responseCode = "200",
@@ -57,12 +55,11 @@ public class AudioController implements SimpleRequestCrud<Integer, RequestAudioD
             )
 
     })
-    @PostMapping(value = "/create")
-    public ResponseEntity<ResponseDto<AudioDto>> createEntity(@RequestBody RequestAudioDto entity) {
-        return convertStatusCodeByData(this.audioService.createEntity(entity));
+    @PostMapping(value = "/upload")
+    public ResponseEntity<ResponseDto<AudioDto>> uploadAudio(@RequestBody MultipartFile audio) {
+        return convertStatusCodeByData(this.audioService.uploadAudio(audio));
     }
 
-    @Override
     @ApiResponses(value={
             @ApiResponse(
                     responseCode = "200",
@@ -96,12 +93,11 @@ public class AudioController implements SimpleRequestCrud<Integer, RequestAudioD
             )
 
     })
-    @GetMapping(value = "/get/{id}")
-    public ResponseEntity<ResponseDto<AudioDto>> getEntity(@PathVariable(value = "id")Integer entityId) {
-        return convertStatusCodeByData(this.audioService.getEntity(entityId));
+    @GetMapping(value = "/download/{id}")
+    public ResponseEntity<ResponseDto<AudioDto>> getEntity(@PathVariable(value = "id")Integer audioId) {
+        return convertStatusCodeByData(this.audioService.downloadAudio(audioId));
     }
 
-    @Override
     @ApiResponses(value={
             @ApiResponse(
                     responseCode = "200",
@@ -136,11 +132,10 @@ public class AudioController implements SimpleRequestCrud<Integer, RequestAudioD
 
     })
     @PutMapping(value = "/update/{id}")
-    public ResponseEntity<ResponseDto<AudioDto>> updateEntity(@PathVariable(value = "id")Integer entityId,@RequestBody RequestAudioDto entity) {
-        return convertStatusCodeByData(this.audioService.updateEntity(entityId,entity));
+    public ResponseEntity<ResponseDto<AudioDto>> updateEntity(@PathVariable(value = "id")Integer entityId,@RequestBody MultipartFile audio) {
+        return convertStatusCodeByData(this.audioService.updateAudio(audio,entityId));
     }
 
-    @Override
     @ApiResponses(value={
             @ApiResponse(
                     responseCode = "200",
@@ -175,7 +170,7 @@ public class AudioController implements SimpleRequestCrud<Integer, RequestAudioD
 
     })
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity<ResponseDto<AudioDto>> deleteEntity(@PathVariable(value = "id")Integer entityId) {
-        return convertStatusCodeByData(this.audioService.deleteEntity(entityId));
+    public ResponseEntity<ResponseDto<AudioDto>> deleteEntity(@PathVariable(value = "id")Integer audioId) {
+        return convertStatusCodeByData(this.audioService.deleteAudio(audioId));
     }
 }

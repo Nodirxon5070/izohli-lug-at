@@ -12,10 +12,11 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "wordInSentence")
+@Table(name = "word_in_sentence")
 public class WordInSentence {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "word_in_sentence_id")
     private Integer wordInSentenceId;
 
     @Column(name = "word_id")
@@ -33,8 +34,7 @@ public class WordInSentence {
     @JoinColumn(name = "word_id",insertable = false,updatable = false)
     private Word word;
 
-    @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JoinColumn(name = "sentence_id",insertable = false,updatable = false)
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Sentence sentence;
 
 }

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,10 +20,8 @@ public class Type {
     private String name;
     private Integer orders;
 
-    @OneToMany(mappedBy = "typeId",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    private Set<WordType> wordType;
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private WordType wordType;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

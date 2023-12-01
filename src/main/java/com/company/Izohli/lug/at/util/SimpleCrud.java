@@ -1,7 +1,6 @@
-package com.company.Izohli.lug.at.utill;
+package com.company.Izohli.lug.at.util;
 
 import com.company.Izohli.lug.at.dto.ResponseDto;
-import org.springframework.http.ResponseEntity;
 
 public interface SimpleCrud<K, RQ, RS> {
     ResponseDto<RS> createEntity(RQ entity);

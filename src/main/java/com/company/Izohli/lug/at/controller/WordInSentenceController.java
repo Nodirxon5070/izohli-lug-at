@@ -4,7 +4,7 @@ import com.company.Izohli.lug.at.dto.ResponseDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestWordInSentenceDto;
 import com.company.Izohli.lug.at.dto.responseDto.WordInSentenceDto;
 import com.company.Izohli.lug.at.service.WordInSentenceService;
-import com.company.Izohli.lug.at.utill.SimpleRequestCrud;
+import com.company.Izohli.lug.at.util.SimpleRequestCrud;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

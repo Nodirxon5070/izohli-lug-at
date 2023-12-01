@@ -5,8 +5,6 @@ import com.company.Izohli.lug.at.module.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-import java.util.Set;
-
 @Getter
 @Setter
 @Builder
@@ -22,10 +20,6 @@ public class RequestWordDto {
 
     private Integer categoryId;
     private Integer audioId;
-
-    private AudioDto audio;
-
-    private CategoryDto category;
 
 
 }

@@ -1,10 +1,7 @@
-package com.company.Izohli.lug.at.mapper;
+package com.company.Izohli.lug.at.service.mapper;
 
-import com.company.Izohli.lug.at.dto.requestDto.RequestSentenceDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestTypeDto;
-import com.company.Izohli.lug.at.dto.responseDto.SentenceDto;
 import com.company.Izohli.lug.at.dto.responseDto.TypeDto;
-import com.company.Izohli.lug.at.module.Sentence;
 import com.company.Izohli.lug.at.module.Type;
 import org.mapstruct.BeanMapping;
 import org.mapstruct.Mapper;

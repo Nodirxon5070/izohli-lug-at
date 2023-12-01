@@ -2,6 +2,47 @@ package com.company.Izohli.lug.at.constants;
 
 public class SwaggerConstants {
 
+
+
+    public static final String EXAMPLE_LOGIN_SUCCESS = """
+            {
+                 "success":"true",
+                 "code":"0",
+                 "message":"Login success"
+            }
+            """;
+
+    public static final String EXAMPLE_LOGIN_UNSUCCESSFUL = """
+            {
+                 "success":"false",
+                 "code":"-1",
+                 "message":"Login failed"
+            }
+            """;
+
+
+    public static final String EXAMPLE_USER_SUCCESS = """
+            {
+                 "success":"true",
+                 "code":"0",
+                 "message":"OK",
+                 "data": {
+                    "firstName":"Value..."
+                    "lastName":"Value..."
+                    "username":"Value..."
+                 }
+            }
+            """;
+
+    public static final String EXAMPLE_USER_NOT_FOUND = """
+            {
+                 "success":"false",
+                 "code":"-1",
+                 "message":"User is not found!"
+            }
+            """;
+
+
     public static final String EXAMPLE_AUDIO_SUCCESS = """
             {
                  "success":"true",
@@ -17,7 +58,7 @@ public class SwaggerConstants {
             {
                  "success":"false",
                  "code":"-1",
-                 "message":"Category is not found!"
+                 "message":"Audio is not found!"
             }
             """;
 

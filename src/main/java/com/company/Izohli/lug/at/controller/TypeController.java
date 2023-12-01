@@ -4,7 +4,7 @@ import com.company.Izohli.lug.at.dto.ResponseDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestTypeDto;
 import com.company.Izohli.lug.at.dto.responseDto.TypeDto;
 import com.company.Izohli.lug.at.service.TypeService;
-import com.company.Izohli.lug.at.utill.SimpleRequestCrud;
+import com.company.Izohli.lug.at.util.SimpleRequestCrud;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

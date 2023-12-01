@@ -1,13 +1,8 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
-import com.company.Izohli.lug.at.module.*;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Set;
 
 @Getter
@@ -27,8 +22,9 @@ public class WordDto {
     private Integer numLike;
     private Integer numShare;
 
-    private CategoryDto category;
     private AudioDto audio;
+
+    private CategoryDto category;
 
     private Set<WordTypeDto> wordType;
 

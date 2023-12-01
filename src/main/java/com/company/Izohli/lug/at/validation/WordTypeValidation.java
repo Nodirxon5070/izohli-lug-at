@@ -2,11 +2,8 @@ package com.company.Izohli.lug.at.validation;
 
 import com.company.Izohli.lug.at.dto.ErrorDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestWordTypeDto;
-import com.company.Izohli.lug.at.dto.responseDto.WordInSentenceDto;
-import com.company.Izohli.lug.at.dto.responseDto.WordTypeDto;
 import com.company.Izohli.lug.at.repository.TypeRepository;
 import com.company.Izohli.lug.at.repository.WordRepository;
-import com.company.Izohli.lug.at.repository.WordTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

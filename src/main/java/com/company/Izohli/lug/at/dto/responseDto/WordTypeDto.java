@@ -1,7 +1,5 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
-import com.company.Izohli.lug.at.module.Type;
-import com.company.Izohli.lug.at.module.Word;
 import lombok.*;
 
 import java.time.LocalDateTime;

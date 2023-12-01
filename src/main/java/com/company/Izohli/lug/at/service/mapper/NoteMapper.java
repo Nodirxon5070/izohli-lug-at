@@ -1,14 +1,11 @@
-package com.company.Izohli.lug.at.mapper;
+package com.company.Izohli.lug.at.service.mapper;
 
-import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestNoteDto;
-import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
 import com.company.Izohli.lug.at.dto.responseDto.NoteDto;
-import com.company.Izohli.lug.at.module.Audio;
 import com.company.Izohli.lug.at.module.Note;
-import org.aspectj.weaver.ast.Not;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 
 import java.util.stream.Collectors;
 
@@ -16,6 +13,7 @@ import java.util.stream.Collectors;
 public abstract class NoteMapper {
 
     @Autowired
+    @Lazy
     protected WordMapper wordMapper;
     public abstract Note toEntity(RequestNoteDto dto);
 

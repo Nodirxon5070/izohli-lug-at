@@ -4,15 +4,18 @@ import com.company.Izohli.lug.at.dto.ResponseDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestWordDto;
 import com.company.Izohli.lug.at.dto.responseDto.WordDto;
 import com.company.Izohli.lug.at.service.WordService;
-import com.company.Izohli.lug.at.utill.SimpleRequestCrud;
+import com.company.Izohli.lug.at.util.SimpleRequestCrud;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 import static com.company.Izohli.lug.at.constants.SwaggerConstants.*;
 import static com.company.Izohli.lug.at.dto.SimpleResponseDto.convertStatusCodeByData;
@@ -178,4 +181,11 @@ public class WordController implements SimpleRequestCrud<Integer, RequestWordDto
     public ResponseEntity<ResponseDto<WordDto>> deleteEntity(@PathVariable(value = "id")Integer entityId) {
         return convertStatusCodeByData(this.wordService.deleteEntity(entityId));
     }
+
+
+    @GetMapping(value = "/search-advanced")
+    public ResponseDto<Page<WordDto>> getAllWordByAdvancedSearch(@RequestParam Map<String, String> params) {
+        return this.wordService.getAllWordAdvancedSearch(params);
+    }
+
 }

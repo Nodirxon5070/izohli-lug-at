@@ -1,14 +1,13 @@
 package com.company.Izohli.lug.at.service;
 
 import com.company.Izohli.lug.at.dto.ResponseDto;
-import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestSentenceDto;
-import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
-import com.company.Izohli.lug.at.dto.responseDto.DayWordDto;
 import com.company.Izohli.lug.at.dto.responseDto.SentenceDto;
-import com.company.Izohli.lug.at.mapper.SentenceMapper;
 import com.company.Izohli.lug.at.repository.SentenceRepository;
-import com.company.Izohli.lug.at.utill.SimpleCrud;
+import com.company.Izohli.lug.at.repository.WordInSentenceRepository;
+import com.company.Izohli.lug.at.service.mapper.SentenceMapper;
+import com.company.Izohli.lug.at.service.mapper.WordInSentenceMapper;
+import com.company.Izohli.lug.at.util.SimpleCrud;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +18,10 @@ import java.time.LocalDateTime;
 public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, SentenceDto> {
     private final SentenceRepository sentenceRepository;
     private final SentenceMapper sentenceMapper;
+    private final WordInSentenceMapper wordInSentenceMapper;
+    private final WordInSentenceRepository wordInSentenceRepository;
+
+
     @Override
     public ResponseDto<SentenceDto> createEntity(RequestSentenceDto dto) {
         try {
@@ -42,12 +45,16 @@ public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, 
     @Override
     public ResponseDto<SentenceDto> getEntity(Integer entityId) {
         return this.sentenceRepository.findBySentenceIdAndDeletedAtIsNull(entityId)
-                .map(sentence ->  ResponseDto.<SentenceDto>builder()
+                .map(sentence -> {
+                    SentenceDto sentenceDto = this.sentenceMapper.toDto(sentence);
+                    sentenceDto.setWordInSentences(this.wordInSentenceMapper.toDto(this.wordInSentenceRepository.findWordInSentence(sentence.getSentenceId())));
+                return ResponseDto.<SentenceDto>builder()
                         .success(true)
                         .message("OK")
-                        .data(this.sentenceMapper.toDto(sentence))
-                        .build()
-                ).orElse(ResponseDto.<SentenceDto>builder()
+                        .data(sentenceDto)
+                        .build();
+                })
+                .orElse(ResponseDto.<SentenceDto>builder()
                         .code(-1)
                         .message(String.format("Sentence with %d id is not found",entityId))
                         .build());

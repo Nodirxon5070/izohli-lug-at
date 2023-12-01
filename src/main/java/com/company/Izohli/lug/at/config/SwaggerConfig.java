@@ -1,5 +1,9 @@
 package com.company.Izohli.lug.at.config;
 
+import io.swagger.v3.oas.models.Components;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,8 +12,17 @@ import org.springframework.context.annotation.Configuration;
 public class SwaggerConfig {
 
     @Bean
+    public GroupedOpenApi groupedByUserAPI(){
+        String[] array = new String[]{"/users/register","/users/login"};
+        return GroupedOpenApi.builder()
+                .group("User")
+                .pathsToMatch(array)
+                .build();
+    }
+
+    @Bean
     public GroupedOpenApi groupedByAudioAPI(){
-        String[] array = new String[]{"/audio/create","/audio/get/{id}","/audio/update/{id}","/audio/delete/{id}"};
+        String[] array = new String[]{"/audio/upload","/audio/download/{id}","/audio/update/{id}","/audio/delete/{id}"};
         return GroupedOpenApi.builder()
                 .group("Audio")
                 .pathsToMatch(array)
@@ -86,6 +99,21 @@ public class SwaggerConfig {
                 .group("WordType")
                 .pathsToMatch(array)
                 .build();
+    }
+
+    @Bean
+    public OpenAPI openAPI() {
+        return new OpenAPI().addSecurityItem(new SecurityRequirement().
+                        addList("Bearer Authentication"))
+                .components(new Components().addSecuritySchemes
+                        ("Bearer Authentication", createAPIKeyScheme()));
+    }
+
+
+    private SecurityScheme createAPIKeyScheme() {
+        return new SecurityScheme().type(SecurityScheme.Type.HTTP)
+                .bearerFormat("JWT")
+                .scheme("bearer");
     }
 
 

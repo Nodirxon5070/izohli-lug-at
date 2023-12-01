@@ -2,11 +2,7 @@ package com.company.Izohli.lug.at.validation;
 
 import com.company.Izohli.lug.at.dto.ErrorDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestNoteDto;
-import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
-import com.company.Izohli.lug.at.dto.responseDto.NoteDto;
-import com.company.Izohli.lug.at.repository.NoteRepository;
 import com.company.Izohli.lug.at.repository.WordRepository;
-import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

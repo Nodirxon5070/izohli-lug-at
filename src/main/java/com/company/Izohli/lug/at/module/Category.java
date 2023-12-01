@@ -17,6 +17,7 @@ import java.util.Set;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "category_id")
     private Integer categoryId;
 
     private String name;
@@ -26,9 +27,5 @@ public class Category {
             fetch = FetchType.EAGER,
             cascade = CascadeType.ALL)
     private Set<Word>words;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 
 }

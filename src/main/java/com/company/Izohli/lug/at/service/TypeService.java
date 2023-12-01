@@ -1,13 +1,13 @@
 package com.company.Izohli.lug.at.service;
 
 import com.company.Izohli.lug.at.dto.ResponseDto;
-import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestTypeDto;
-import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
 import com.company.Izohli.lug.at.dto.responseDto.TypeDto;
-import com.company.Izohli.lug.at.mapper.TypeMapper;
 import com.company.Izohli.lug.at.repository.TypeRepository;
-import com.company.Izohli.lug.at.utill.SimpleCrud;
+import com.company.Izohli.lug.at.repository.WordTypeRepository;
+import com.company.Izohli.lug.at.service.mapper.TypeMapper;
+import com.company.Izohli.lug.at.service.mapper.WordTypeMapper;
+import com.company.Izohli.lug.at.util.SimpleCrud;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +18,9 @@ import java.time.LocalDateTime;
 public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto> {
     private final TypeRepository typeRepository;
     private final TypeMapper typeMapper;
+    private final WordTypeRepository wordTypeRepository;
+    private final WordTypeMapper wordTypeMapper;
+
     @Override
     public ResponseDto<TypeDto> createEntity(RequestTypeDto dto) {
         try {
@@ -31,10 +34,10 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
                     ))
                     .build();
 
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseDto.<TypeDto>builder()
                     .code(-2)
-                    .message(String.format("Type while saving error %s",e.getMessage()))
+                    .message(String.format("Type while saving error %s", e.getMessage()))
                     .build();
         }
     }
@@ -42,14 +45,18 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
     @Override
     public ResponseDto<TypeDto> getEntity(Integer entityId) {
         return this.typeRepository.findByTypeIdAndDeletedAtIsNull(entityId)
-                .map(type -> ResponseDto.<TypeDto>builder()
-                        .success(true)
-                        .message("Ok")
-                        .data(this.typeMapper.toDto(type))
-                        .build())
+                .map(type -> {
+                    TypeDto typeDto = this.typeMapper.toDto(type);
+                    typeDto.setWordType(this.wordTypeMapper.toDto(this.wordTypeRepository.findWordTypeByTypeId(type.getTypeId())));
+                    return ResponseDto.<TypeDto>builder()
+                            .success(true)
+                            .message("Ok")
+                            .data(typeDto)
+                            .build();
+                })
                 .orElse(ResponseDto.<TypeDto>builder()
                         .code(-1)
-                        .message(String.format("Type with %d id is not found",entityId))
+                        .message(String.format("Type with %d id is not found", entityId))
                         .build());
     }
 
@@ -62,18 +69,18 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
                             .message("Ok")
                             .data(this.typeMapper.toDto(
                                     this.typeRepository.save(
-                                            this.typeMapper.updateType(entity,type)
+                                            this.typeMapper.updateType(entity, type)
                                     )
                             ))
                             .build())
                     .orElse(ResponseDto.<TypeDto>builder()
                             .code(-1)
-                            .message(String.format("Type with %d id is not found",entityId))
+                            .message(String.format("Type with %d id is not found", entityId))
                             .build());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseDto.<TypeDto>builder()
                     .code(-2)
-                    .message(String.format("Type while saving error %s",e.getMessage()))
+                    .message(String.format("Type while saving error %s", e.getMessage()))
                     .build();
         }
     }
@@ -93,7 +100,7 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
                 })
                 .orElse(ResponseDto.<TypeDto>builder()
                         .code(-1)
-                        .message(String.format("Type with %d id is not found",entityId))
+                        .message(String.format("Type with %d id is not found", entityId))
                         .build());
     }
 }

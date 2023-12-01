@@ -1,8 +1,5 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
-import com.company.Izohli.lug.at.module.Sentence;
-import com.company.Izohli.lug.at.module.Word;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.time.LocalDateTime;

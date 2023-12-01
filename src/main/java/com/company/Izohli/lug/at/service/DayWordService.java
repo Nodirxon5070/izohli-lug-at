@@ -2,21 +2,18 @@ package com.company.Izohli.lug.at.service;
 
 import com.company.Izohli.lug.at.dto.ErrorDto;
 import com.company.Izohli.lug.at.dto.ResponseDto;
-import com.company.Izohli.lug.at.dto.requestDto.RequestAudioDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestDayWordDto;
-import com.company.Izohli.lug.at.dto.responseDto.AudioDto;
 import com.company.Izohli.lug.at.dto.responseDto.DayWordDto;
-import com.company.Izohli.lug.at.mapper.DayWordMapper;
 import com.company.Izohli.lug.at.module.DayWord;
 import com.company.Izohli.lug.at.repository.DayWordRepository;
-import com.company.Izohli.lug.at.utill.SimpleCrud;
+import com.company.Izohli.lug.at.service.mapper.DayWordMapper;
+import com.company.Izohli.lug.at.util.SimpleCrud;
 import com.company.Izohli.lug.at.validation.DayWordValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +21,7 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
     private final DayWordRepository dayWordRepository;
     private final DayWordValidation dayWordValidation;
     private final DayWordMapper dayWordMapper;
+    private final WordService wordService;
 
 
     @Override
@@ -51,7 +49,7 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
         } catch (Exception e) {
             return ResponseDto.<DayWordDto>builder()
                     .code(-2)
-                    .message(String.format("DayWord while saving error %s",e.getMessage()))
+                    .message(String.format("DayWord while saving error %s", e.getMessage()))
                     .build();
         }
     }
@@ -59,14 +57,18 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
     @Override
     public ResponseDto<DayWordDto> getEntity(Integer entityId) {
         return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
-                .map(dayWord ->  ResponseDto.<DayWordDto>builder()
-                        .success(true)
-                        .message("OK")
-                        .data(this.dayWordMapper.toDtoWithWord(dayWord))
-                        .build())
+                .map(dayWord -> {
+                    DayWordDto dto = this.dayWordMapper.toDtoWithWord(dayWord);
+                    dto.setWord(wordService.getEntity(dayWord.getWordId()).getData());
+                    return ResponseDto.<DayWordDto>builder()
+                            .success(true)
+                            .message("OK")
+                            .data(dto)
+                            .build();
+                })
                 .orElse(ResponseDto.<DayWordDto>builder()
                         .code(-1)
-                        .message(String.format("DayWord with %d id is not found",entityId))
+                        .message(String.format("DayWord with %d id is not found", entityId))
                         .build());
     }
 
@@ -75,22 +77,22 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
         try {
             return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
                     .map(dayWord -> ResponseDto.<DayWordDto>builder()
-                                .success(true)
-                                .message("OK")
-                                .data(this.dayWordMapper.toDto(
-                                        this.dayWordRepository.save(
-                                                this.dayWordMapper.updateDayWord(entity, dayWord)
-                                        )
-                                ))
-                                .build())
+                            .success(true)
+                            .message("OK")
+                            .data(this.dayWordMapper.toDto(
+                                    this.dayWordRepository.save(
+                                            this.dayWordMapper.updateDayWord(entity, dayWord)
+                                    )
+                            ))
+                            .build())
                     .orElse(ResponseDto.<DayWordDto>builder()
                             .code(-1)
                             .message(String.format("DayWord with %d id is not found", entityId))
                             .build());
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseDto.<DayWordDto>builder()
                     .code(-2)
-                    .message(String.format("DayWord while saving error %s",e.getMessage()))
+                    .message(String.format("DayWord while saving error %s", e.getMessage()))
                     .build();
         }
     }
@@ -100,7 +102,7 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
         return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
                 .map(dayWord -> {
                     dayWord.setDeletedAt(LocalDateTime.now());
-                   return ResponseDto.<DayWordDto>builder()
+                    return ResponseDto.<DayWordDto>builder()
                             .success(true)
                             .message("OK")
                             .data(this.dayWordMapper.toDto(
@@ -109,7 +111,7 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
                             .build();
                 }).orElse(ResponseDto.<DayWordDto>builder()
                         .code(-1)
-                        .message(String.format("DayWord with %d id is not found",entityId))
+                        .message(String.format("DayWord with %d id is not found", entityId))
                         .build());
     }
 }

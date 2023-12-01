@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -19,12 +18,10 @@ public class Audio {
     private Integer audioId;
     private String path;
 
-    @OneToMany(mappedBy = "wordId",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    private Set<Word> words;
+    @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private Word word;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
+    private String ext;
+    private String audioName;
+
 }

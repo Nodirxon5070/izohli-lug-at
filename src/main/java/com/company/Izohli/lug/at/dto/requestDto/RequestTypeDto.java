@@ -1,12 +1,8 @@
 package com.company.Izohli.lug.at.dto.requestDto;
 
-import com.company.Izohli.lug.at.dto.responseDto.WordTypeDto;
-import com.company.Izohli.lug.at.module.WordType;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.util.Set;
 
 @Getter
 @Setter
