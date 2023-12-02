@@ -97,7 +97,7 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
         } catch (Exception e) {
             return ResponseDto.<WordDto>builder()
                     .code(-2)
-                    .message(String.format("Word while saving error %s", e.getMessage()))
+                    .message(String.format("Word while updating error %s", e.getMessage()))
                     .build();
 
         }
@@ -105,19 +105,26 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
 
     @Override
     public ResponseDto<WordDto> deleteEntity(Integer entityId) {
-        return this.wordRepository.findWordByWordId(entityId)
-                .map(word -> {
-                    this.wordRepository.delete(word);
-                    return ResponseDto.<WordDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(this.wordMapper.toDto(word))
-                            .build();
-                })
-                .orElse(ResponseDto.<WordDto>builder()
-                        .code(-1)
-                        .message(String.format("Word with %d id is not found", entityId))
-                        .build());
+        try {
+            return this.wordRepository.findWordByWordId(entityId)
+                    .map(word -> {
+                        this.wordRepository.delete(word);
+                        return ResponseDto.<WordDto>builder()
+                                .success(true)
+                                .message("Ok")
+                                .data(this.wordMapper.toDto(word))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<WordDto>builder()
+                            .code(-1)
+                            .message(String.format("Word with %d id is not found", entityId))
+                            .build());
+        } catch (Exception e) {
+            return ResponseDto.<WordDto>builder()
+                    .code(-2)
+                    .message(String.format("Word while deleting error %s", e.getMessage()))
+                    .build();
+        }
     }
 
     public ResponseDto<Page<WordDto>> getAllWordAdvancedSearch(Map<String, String> params) {

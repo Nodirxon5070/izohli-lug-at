@@ -75,25 +75,32 @@ public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, 
         }catch (Exception e) {
             return ResponseDto.<SentenceDto>builder()
                     .code(-2)
-                    .message(String.format("Sentence while saving error %s",e.getMessage()))
+                    .message(String.format("Sentence while updating error %s",e.getMessage()))
                     .build();
         }
     }
 
     @Override
     public ResponseDto<SentenceDto> deleteEntity(Integer entityId) {
-        return this.sentenceRepository.findBySentenceId(entityId)
-                .map(sentence -> {
-                    this.sentenceRepository.delete(sentence);
-                    return ResponseDto.<SentenceDto>builder()
-                            .success(true)
-                            .message("OK")
-                            .data(this.sentenceMapper.toDto(sentence))
-                            .build();
-                })
-                .orElse(ResponseDto.<SentenceDto>builder()
-                        .code(-1)
-                        .message(String.format("Sentence with %d id is not found",entityId))
-                        .build());
+        try {
+            return this.sentenceRepository.findBySentenceId(entityId)
+                    .map(sentence -> {
+                        this.sentenceRepository.delete(sentence);
+                        return ResponseDto.<SentenceDto>builder()
+                                .success(true)
+                                .message("OK")
+                                .data(this.sentenceMapper.toDto(sentence))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<SentenceDto>builder()
+                            .code(-1)
+                            .message(String.format("Sentence with %d id is not found", entityId))
+                            .build());
+        }catch (Exception e) {
+            return ResponseDto.<SentenceDto>builder()
+                    .code(-2)
+                    .message(String.format("Sentence while deleting error %s",e.getMessage()))
+                    .build();
+        }
     }
 }

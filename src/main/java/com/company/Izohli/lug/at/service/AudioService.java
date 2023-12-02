@@ -43,7 +43,7 @@ public class AudioService  {
         } catch (Exception e) {
             return ResponseDto.<AudioDto>builder()
                     .code(-3)
-                    .message("Audio while saving error message :: " + e.getMessage())
+                    .message("Audio while uploading error message :: " + e.getMessage())
                     .build();
         }
     }

@@ -75,25 +75,33 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
         } catch (Exception e) {
             return ResponseDto.<TypeDto>builder()
                     .code(-2)
-                    .message(String.format("Type while saving error %s", e.getMessage()))
+                    .message(String.format("Type while updating error %s", e.getMessage()))
                     .build();
         }
     }
 
     @Override
     public ResponseDto<TypeDto> deleteEntity(Integer entityId) {
-        return this.typeRepository.findByTypeId(entityId)
-                .map(type -> {
-                    this.typeRepository.delete(type);
-                    return ResponseDto.<TypeDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(this.typeMapper.toDto(type))
-                            .build();
-                })
-                .orElse(ResponseDto.<TypeDto>builder()
-                        .code(-1)
-                        .message(String.format("Type with %d id is not found", entityId))
-                        .build());
+        try {
+            return this.typeRepository.findByTypeId(entityId)
+                    .map(type -> {
+                        this.typeRepository.delete(type);
+                        return ResponseDto.<TypeDto>builder()
+                                .success(true)
+                                .message("Ok")
+                                .data(this.typeMapper.toDto(type))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<TypeDto>builder()
+                            .code(-1)
+                            .message(String.format("Type with %d id is not found", entityId))
+                            .build());
+        }
+        catch (Exception e) {
+            return ResponseDto.<TypeDto>builder()
+                    .code(-2)
+                    .message(String.format("Type while deleting error %s", e.getMessage()))
+                    .build();
+        }
     }
 }

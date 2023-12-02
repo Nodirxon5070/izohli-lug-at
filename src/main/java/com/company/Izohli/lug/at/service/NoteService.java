@@ -35,12 +35,11 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
                     .build();
         }
         try {
-            Note note = this.noteMapper.toEntity(dto);
             return ResponseDto.<NoteDto>builder()
                     .success(true)
                     .message("Ok")
-                    .data(this.noteMapper.toDtoWithWord(
-                            this.noteRepository.save(note)
+                    .data(this.noteMapper.toDto(
+                            this.noteRepository.save(this.noteMapper.toEntity(dto))
                     ))
                     .build();
 
@@ -93,24 +92,31 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
         } catch (Exception e) {
             return ResponseDto.<NoteDto>builder()
                     .code(-2)
-                    .message(String.format("Note while saving error %s", e.getMessage()))
+                    .message(String.format("Note while updating error %s", e.getMessage()))
                     .build();
         }
     }
 
     @Override
     public ResponseDto<NoteDto> deleteEntity(Integer entityId) {
-        return this.noteRepository.findByNoteId(entityId)
-                .map(note -> {
-                    this.noteRepository.delete(note);
-                    return ResponseDto.<NoteDto>builder()
-                            .success(true)
-                            .message("OK")
-                            .data(this.noteMapper.toDto(note))
-                            .build();
-                }).orElse(ResponseDto.<NoteDto>builder()
-                        .code(-1)
-                        .message(String.format("Note with %d id is not found", entityId))
-                        .build());
+        try {
+            return this.noteRepository.findByNoteId(entityId)
+                    .map(note -> {
+                        this.noteRepository.delete(note);
+                        return ResponseDto.<NoteDto>builder()
+                                .success(true)
+                                .message("OK")
+                                .data(this.noteMapper.toDto(note))
+                                .build();
+                    }).orElse(ResponseDto.<NoteDto>builder()
+                            .code(-1)
+                            .message(String.format("Note with %d id is not found", entityId))
+                            .build());
+        }catch (Exception e) {
+            return ResponseDto.<NoteDto>builder()
+                    .code(-2)
+                    .message(String.format("Note while deleting error %s", e.getMessage()))
+                    .build();
+        }
     }
 }

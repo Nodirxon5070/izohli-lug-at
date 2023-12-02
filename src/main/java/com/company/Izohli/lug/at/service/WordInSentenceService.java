@@ -90,31 +90,39 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
                             .build())
                     .orElse(ResponseDto.<WordInSentenceDto>builder()
                             .code(-1)
-                            .message(String.format("WordInSentenceDto with %d id is not found", entityId))
+                            .message(String.format("WordInSentence with %d id is not found", entityId))
                             .build());
 
         } catch (Exception e) {
             return ResponseDto.<WordInSentenceDto>builder()
                     .code(-2)
-                    .message(String.format("WordInSentence while saving error %s", e.getMessage()))
+                    .message(String.format("WordInSentence while updating error %s", e.getMessage()))
                     .build();
         }
     }
 
     @Override
     public ResponseDto<WordInSentenceDto> deleteEntity(Integer entityId) {
-        return this.wordInSentenceRepository.findByWordInSentenceId(entityId)
-                .map(wordInSentence -> {
-                    this.wordInSentenceRepository.delete(wordInSentence);
-                    return ResponseDto.<WordInSentenceDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(this.wordInSentenceMapper.toDto(wordInSentence))
-                            .build();
-                })
-                .orElse(ResponseDto.<WordInSentenceDto>builder()
-                        .code(-1)
-                        .message(String.format("WordInSentence with %d id is not found", entityId))
-                        .build());
+        try {
+            return this.wordInSentenceRepository.findByWordInSentenceId(entityId)
+                    .map(wordInSentence -> {
+                        this.wordInSentenceRepository.delete(wordInSentence);
+                        return ResponseDto.<WordInSentenceDto>builder()
+                                .success(true)
+                                .message("Ok")
+                                .data(this.wordInSentenceMapper.toDto(wordInSentence))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<WordInSentenceDto>builder()
+                            .code(-1)
+                            .message(String.format("WordInSentence with %d id is not found", entityId))
+                            .build());
+        }
+        catch (Exception e) {
+            return ResponseDto.<WordInSentenceDto>builder()
+                    .code(-2)
+                    .message(String.format("WordInSentence while deleting error %s", e.getMessage()))
+                    .build();
+        }
     }
 }

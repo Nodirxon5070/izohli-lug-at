@@ -25,12 +25,12 @@ public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, 
     @Override
     public ResponseDto<CategoryDto> createEntity(RequestCategoryDto dto) {
         try {
-            Category entity = categoryMapper.toEntity(dto);
             return ResponseDto.<CategoryDto>builder()
                     .success(true)
                     .message("OK")
                     .data(this.categoryMapper.toDto(
-                            this.categoryRepository.save(entity)
+                            this.categoryRepository.save(
+                                    categoryMapper.toEntity(dto))
                     ))
                     .build();
         } catch (Exception e) {
@@ -58,42 +58,50 @@ public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, 
     }
 
     @Override
-    public ResponseDto<CategoryDto> updateEntity(Integer entityId, RequestCategoryDto entity) {
-        Optional<Category> optional = this.categoryRepository.findByCategoryId(entityId);
-        if (optional.isEmpty()) {
-            return ResponseDto.<CategoryDto>builder()
-                    .code(-1)
-                    .message("OK")
-                    .data(this.categoryMapper.toDto(
-                            this.categoryRepository.save(
-                                    this.categoryMapper.updateCategory(entity, optional.get())
-                            )
-                    ))
-                    .build();
-        }
-        Category category = this.categoryMapper.updateCategory(entity, optional.get());
-        this.categoryRepository.save(this.categoryMapper.updateCategory(entity, optional.get()));
-        return ResponseDto.<CategoryDto>builder()
-                .success(true)
-                .message("Ok")
-                .data(this.categoryMapper.toDto(this.categoryRepository.save(this.categoryMapper.updateCategory(entity, optional.get()))))
-                .build();
+    public ResponseDto<CategoryDto> updateEntity(Integer entityId, RequestCategoryDto dto) {
+     try {
+            return this.categoryRepository.findByCategoryId(entityId)
+                    .map(category -> ResponseDto.<CategoryDto>builder()
+                            .success(true)
+                            .message("Ok")
+                            .data(this.categoryMapper.toDto
+                                    (this.categoryRepository.save(
+                                            this.categoryMapper.updateCategory(dto, category))))
+                            .build())
+                    .orElse(ResponseDto.<CategoryDto>builder()
+                            .code(-1)
+                            .message("Category is not found")
+                            .build());
+        }catch (Exception e){
+         return ResponseDto.<CategoryDto>builder()
+               .code(-2)
+               .message(String.format("Category while updating error %s", e.getMessage()))
+               .build();
+     }
+
     }
 
     @Override
     public ResponseDto<CategoryDto> deleteEntity(Integer entityId) {
-        return this.categoryRepository.findByCategoryId(entityId)
-                .map(category -> {
-                    this.categoryRepository.delete(category);
-                    return ResponseDto.<CategoryDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(this.categoryMapper.toDto(category))
-                            .build();
-                })
-                .orElse(ResponseDto.<CategoryDto>builder()
-                        .code(-1)
-                        .message(String.format("Category with %d id is not found", entityId))
-                        .build());
+       try {
+            return this.categoryRepository.findByCategoryId(entityId)
+                    .map(category -> {
+                        this.categoryRepository.delete(category);
+                        return ResponseDto.<CategoryDto>builder()
+                                .success(true)
+                                .message("Ok")
+                                .data(this.categoryMapper.toDto(category))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<CategoryDto>builder()
+                            .code(-1)
+                            .message(String.format("Category with %d id is not found", entityId))
+                            .build());
+        }catch (Exception e){
+           return ResponseDto.<CategoryDto>builder()
+                 .code(-2)
+                 .message(String.format("Category while deleting error %s", e.getMessage()))
+                 .build();
+       }
     }
 }

@@ -94,25 +94,32 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
         } catch (Exception e) {
             return ResponseDto.<WordTypeDto>builder()
                     .code(-2)
-                    .message(String.format("WordType while saving error %s", e.getMessage()))
+                    .message(String.format("WordType while updating error %s", e.getMessage()))
                     .build();
         }
     }
 
     @Override
     public ResponseDto<WordTypeDto> deleteEntity(Integer entityId) {
-        return this.wordTypeRepository.findByWordTypeId(entityId)
-                .map(wordType -> {
-                    this.wordTypeRepository.delete(wordType);
-                    return ResponseDto.<WordTypeDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(this.wordTypeMapper.toDto(wordType))
-                            .build();
-                })
-                .orElse(ResponseDto.<WordTypeDto>builder()
-                        .code(-1)
-                        .message(String.format("WordType with %d id is not found", entityId))
-                        .build());
+        try {
+            return this.wordTypeRepository.findByWordTypeId(entityId)
+                    .map(wordType -> {
+                        this.wordTypeRepository.delete(wordType);
+                        return ResponseDto.<WordTypeDto>builder()
+                                .success(true)
+                                .message("Ok")
+                                .data(this.wordTypeMapper.toDto(wordType))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<WordTypeDto>builder()
+                            .code(-1)
+                            .message(String.format("WordType with %d id is not found", entityId))
+                            .build());
+        }catch (Exception e) {
+            return ResponseDto.<WordTypeDto>builder()
+                    .code(-2)
+                    .message(String.format("WordType while deleting error %s", e.getMessage()))
+                    .build();
+        }
     }
 }

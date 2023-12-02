@@ -93,25 +93,32 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
         } catch (Exception e) {
             return ResponseDto.<DayWordDto>builder()
                     .code(-2)
-                    .message(String.format("DayWord while saving error %s", e.getMessage()))
+                    .message(String.format("DayWord while updating error %s", e.getMessage()))
                     .build();
         }
     }
 
     @Override
     public ResponseDto<DayWordDto> deleteEntity(Integer entityId) {
-        return this.dayWordRepository.findByDayWordId(entityId)
-                .map(dayWord -> {
-                    this.dayWordRepository.delete(dayWord);
-                  return   ResponseDto.<DayWordDto>builder()
-                            .success(true)
-                            .message("OK")
-                            .data(this.dayWordMapper.toDto(dayWord))
-                            .build();
-                })
-                .orElse(ResponseDto.<DayWordDto>builder()
-                        .code(-1)
-                        .message(String.format("DayWord with %d id is not found", entityId))
-                        .build());
+      try {
+            return this.dayWordRepository.findByDayWordId(entityId)
+                    .map(dayWord -> {
+                        this.dayWordRepository.delete(dayWord);
+                        return ResponseDto.<DayWordDto>builder()
+                                .success(true)
+                                .message("OK")
+                                .data(this.dayWordMapper.toDto(dayWord))
+                                .build();
+                    })
+                    .orElse(ResponseDto.<DayWordDto>builder()
+                            .code(-1)
+                            .message(String.format("DayWord with %d id is not found", entityId))
+                            .build());
+        }catch (Exception e) {
+          return ResponseDto.<DayWordDto>builder()
+                  .code(-2)
+                  .message(String.format("DayWord while deleting error %s", e.getMessage()))
+                  .build();
+      }
     }
 }
