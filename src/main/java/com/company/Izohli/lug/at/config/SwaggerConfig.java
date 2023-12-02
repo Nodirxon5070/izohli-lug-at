@@ -76,7 +76,7 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi groupedByWordAPI(){
-        String[] array = new String[]{"/word/create","/word/get/{id}","/word/update/{id}","/word/delete/{id}"};
+        String[] array = new String[]{"/word/create","/word/get/{id}","/word/update/{id}","/word/delete/{id}","/word/search-advanced"};
         return GroupedOpenApi.builder()
                 .group("Word")
                 .pathsToMatch(array)

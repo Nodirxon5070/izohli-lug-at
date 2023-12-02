@@ -3,6 +3,7 @@ package com.company.Izohli.lug.at.service.mapper;
 import com.company.Izohli.lug.at.dto.requestDto.RequestDayWordDto;
 import com.company.Izohli.lug.at.dto.responseDto.DayWordDto;
 import com.company.Izohli.lug.at.module.DayWord;
+import com.company.Izohli.lug.at.repository.WordRepository;
 import com.company.Izohli.lug.at.service.WordService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,14 +16,18 @@ public abstract class DayWordMapper {
 
     @Autowired
     @Lazy
-    protected WordService wordService;
+    protected WordMapper wordMapper;
+
+    @Lazy
+    @Autowired
+    protected WordRepository wordRepository;
 
     public abstract DayWord toEntity(RequestDayWordDto dto);
 
     @Mapping(target = "word",ignore = true)
     public abstract DayWordDto toDto(DayWord dayWord);
 
-    @Mapping(target = "word",expression = "java(wordService.getEntity(dayWord.getWordId()).getData())")
+    @Mapping(target = "word",expression = "java(this.wordMapper.toDto(this.wordRepository.findWordBYWordId(dayWord.getWordId())))")
     public abstract DayWordDto toDtoWithWord(DayWord dayWord);
 
 

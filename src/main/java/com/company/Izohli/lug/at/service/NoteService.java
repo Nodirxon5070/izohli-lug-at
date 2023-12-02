@@ -23,13 +23,10 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
     private final NoteRepository noteRepository;
     private final NoteValidation noteValidation;
     private final NoteMapper noteMapper;
-    private final WordMapper wordMapper;
-    private final WordRepository wordRepository;
 
     @Override
     public ResponseDto<NoteDto> createEntity(RequestNoteDto dto) {
-        List<ErrorDto> errors;
-        errors = this.noteValidation.noteValid(dto);
+        List<ErrorDto> errors = this.noteValidation.noteValid(dto);
         if (!errors.isEmpty()) {
             return ResponseDto.<NoteDto>builder()
                     .code(-3)
@@ -57,16 +54,13 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
 
     @Override
     public ResponseDto<NoteDto> getEntity(Integer entityId) {
-        return this.noteRepository.findByNoteIdAndDeletedAtIsNull(entityId)
-                .map(note -> {
-                    NoteDto noteDto = this.noteMapper.toDtoWithWord(note);
-                    noteDto.setWord(this.wordMapper.toDto(this.wordRepository.findWordByWordId(note.getWordId())));
-                    return ResponseDto.<NoteDto>builder()
+        return this.noteRepository.findByNoteId(entityId)
+                .map(note ->
+                        ResponseDto.<NoteDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(noteDto)
-                            .build();
-                })
+                            .data(this.noteMapper.toDtoWithWord(note))
+                            .build())
                 .orElse(ResponseDto.<NoteDto>builder()
                         .code(-1)
                         .message(String.format("Note with %d id is not found", entityId))
@@ -75,8 +69,16 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
 
     @Override
     public ResponseDto<NoteDto> updateEntity(Integer entityId, RequestNoteDto dto) {
+        List<ErrorDto> errors = this.noteValidation.noteValid(dto);
+        if (!errors.isEmpty()) {
+            return ResponseDto.<NoteDto>builder()
+                    .code(-3)
+                    .message("Validation error")
+                    .errorList(errors)
+                    .build();
+        }
         try {
-            return this.noteRepository.findByNoteIdAndDeletedAtIsNull(entityId)
+            return this.noteRepository.findByNoteId(entityId)
                     .map(note -> ResponseDto.<NoteDto>builder()
                             .success(true)
                             .message("OK")
@@ -98,15 +100,13 @@ public class NoteService implements SimpleCrud<Integer, RequestNoteDto, NoteDto>
 
     @Override
     public ResponseDto<NoteDto> deleteEntity(Integer entityId) {
-        return this.noteRepository.findByNoteIdAndDeletedAtIsNull(entityId)
+        return this.noteRepository.findByNoteId(entityId)
                 .map(note -> {
-                    note.setDeletedAt(LocalDateTime.now());
+                    this.noteRepository.delete(note);
                     return ResponseDto.<NoteDto>builder()
                             .success(true)
                             .message("OK")
-                            .data(this.noteMapper.toDto(
-                                    this.noteRepository.save(note)
-                            ))
+                            .data(this.noteMapper.toDto(note))
                             .build();
                 }).orElse(ResponseDto.<NoteDto>builder()
                         .code(-1)

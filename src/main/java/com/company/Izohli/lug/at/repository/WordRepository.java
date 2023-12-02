@@ -9,16 +9,18 @@ import java.util.Optional;
 
 @Repository
 public interface WordRepository extends JpaRepository<Word,Integer> {
-    Optional<Word> findByWordIdAndDeletedAtIsNull(Integer wordId);
+    Optional<Word> findWordByWordId(Integer wordId);
 
     @Query(
             value = "select *\n" +
                     " from word as w where word_id=?1 and deleted_at is null ",
             nativeQuery = true
     )
-    Word findWordByWordId(Integer id);
+    Word findWordBYWordId(Integer id);
 
     Optional<Word> findAllByCategoryId(Integer id);
     Word findByAudioId(Integer id);
+
+    Word findByCategoryId(Integer id);
 
 }

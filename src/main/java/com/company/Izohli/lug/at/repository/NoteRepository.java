@@ -10,6 +10,6 @@ import java.util.Set;
 
 @Repository
 public interface NoteRepository extends JpaRepository<Note,Integer> {
-    Optional<Note> findByNoteIdAndDeletedAtIsNull(Integer noteId);
-    Set<Note> findAllByWordIdAndDeletedAtIsNull(Integer noteId);
+    Optional<Note> findByNoteId(Integer noteId);
+    Set<Note> findAllByWordId(Integer noteId);
 }

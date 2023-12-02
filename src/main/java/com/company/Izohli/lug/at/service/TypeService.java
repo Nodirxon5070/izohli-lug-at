@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto> {
     private final TypeRepository typeRepository;
     private final TypeMapper typeMapper;
-    private final WordTypeRepository wordTypeRepository;
-    private final WordTypeMapper wordTypeMapper;
+
 
     @Override
     public ResponseDto<TypeDto> createEntity(RequestTypeDto dto) {
@@ -44,16 +43,12 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
 
     @Override
     public ResponseDto<TypeDto> getEntity(Integer entityId) {
-        return this.typeRepository.findByTypeIdAndDeletedAtIsNull(entityId)
-                .map(type -> {
-                    TypeDto typeDto = this.typeMapper.toDto(type);
-                    typeDto.setWordType(this.wordTypeMapper.toDto(this.wordTypeRepository.findWordTypeByTypeId(type.getTypeId())));
-                    return ResponseDto.<TypeDto>builder()
+        return this.typeRepository.findByTypeId(entityId)
+                .map(type -> ResponseDto.<TypeDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(typeDto)
-                            .build();
-                })
+                            .data(this.typeMapper.toDtoWithWordType(type))
+                            .build())
                 .orElse(ResponseDto.<TypeDto>builder()
                         .code(-1)
                         .message(String.format("Type with %d id is not found", entityId))
@@ -63,7 +58,7 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
     @Override
     public ResponseDto<TypeDto> updateEntity(Integer entityId, RequestTypeDto entity) {
         try {
-            return this.typeRepository.findByTypeIdAndDeletedAtIsNull(entityId)
+            return this.typeRepository.findByTypeId(entityId)
                     .map(type -> ResponseDto.<TypeDto>builder()
                             .success(true)
                             .message("Ok")
@@ -87,15 +82,13 @@ public class TypeService implements SimpleCrud<Integer, RequestTypeDto, TypeDto>
 
     @Override
     public ResponseDto<TypeDto> deleteEntity(Integer entityId) {
-        return this.typeRepository.findByTypeIdAndDeletedAtIsNull(entityId)
+        return this.typeRepository.findByTypeId(entityId)
                 .map(type -> {
-                    type.setDeletedAt(LocalDateTime.now());
+                    this.typeRepository.delete(type);
                     return ResponseDto.<TypeDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(this.typeMapper.toDto(
-                                    this.typeRepository.save(type)
-                            ))
+                            .data(this.typeMapper.toDto(type))
                             .build();
                 })
                 .orElse(ResponseDto.<TypeDto>builder()

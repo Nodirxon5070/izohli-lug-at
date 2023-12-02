@@ -21,7 +21,7 @@ public class WordValidation {
         if (this.categoryRepository.findByCategoryId(dto.getCategoryId()).isEmpty()) {
             errorList.add(new ErrorDto("categoryId", String.format("categoryId with %d:id is not found!", dto.getCategoryId())));
         }
-        /*if (this.audioRepository.findByAudioIdAndDeletedAtIsNull(dto.getAudioId()).isEmpty()) {
+        /*if (this.audioRepository.findByAudioId(dto.getAudioId()).isEmpty()) {
             errorList.add(new ErrorDto("audioId", String.format("audioId with %d:id is not found!", dto.getAudioId())));
         }*/
         return errorList;

@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, SentenceDto> {
     private final SentenceRepository sentenceRepository;
     private final SentenceMapper sentenceMapper;
-    private final WordInSentenceMapper wordInSentenceMapper;
-    private final WordInSentenceRepository wordInSentenceRepository;
+
 
 
     @Override
@@ -44,16 +43,12 @@ public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, 
 
     @Override
     public ResponseDto<SentenceDto> getEntity(Integer entityId) {
-        return this.sentenceRepository.findBySentenceIdAndDeletedAtIsNull(entityId)
-                .map(sentence -> {
-                    SentenceDto sentenceDto = this.sentenceMapper.toDto(sentence);
-                    sentenceDto.setWordInSentences(this.wordInSentenceMapper.toDto(this.wordInSentenceRepository.findWordInSentence(sentence.getSentenceId())));
-                return ResponseDto.<SentenceDto>builder()
+        return this.sentenceRepository.findBySentenceId(entityId)
+                .map(sentence -> ResponseDto.<SentenceDto>builder()
                         .success(true)
                         .message("OK")
-                        .data(sentenceDto)
-                        .build();
-                })
+                        .data(this.sentenceMapper.toDtoWithWordInSentence(sentence))
+                        .build())
                 .orElse(ResponseDto.<SentenceDto>builder()
                         .code(-1)
                         .message(String.format("Sentence with %d id is not found",entityId))
@@ -63,7 +58,7 @@ public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, 
     @Override
     public ResponseDto<SentenceDto> updateEntity(Integer entityId, RequestSentenceDto entity) {
         try {
-            return this.sentenceRepository.findBySentenceIdAndDeletedAtIsNull(entityId)
+            return this.sentenceRepository.findBySentenceId(entityId)
                     .map(sentence ->  ResponseDto.<SentenceDto>builder()
                             .success(true)
                             .message("OK")
@@ -87,15 +82,13 @@ public class SentenceService implements SimpleCrud<Integer, RequestSentenceDto, 
 
     @Override
     public ResponseDto<SentenceDto> deleteEntity(Integer entityId) {
-        return this.sentenceRepository.findBySentenceIdAndDeletedAtIsNull(entityId)
+        return this.sentenceRepository.findBySentenceId(entityId)
                 .map(sentence -> {
-                    sentence.setDeletedAt(LocalDateTime.now());
+                    this.sentenceRepository.delete(sentence);
                     return ResponseDto.<SentenceDto>builder()
                             .success(true)
                             .message("OK")
-                            .data(this.sentenceMapper.toDto(
-                                    this.sentenceRepository.save(sentence)
-                            ))
+                            .data(this.sentenceMapper.toDto(sentence))
                             .build();
                 })
                 .orElse(ResponseDto.<SentenceDto>builder()

@@ -24,15 +24,10 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
     private final WordInSentenceRepository wordInSentenceRepository;
     private final WordInSentenceMapper wordInSentenceMapper;
     private final WordInSentenceValidation wordInSentenceValidation;
-    private final WordRepository wordRepository;
-    private final WordMapper wordMapper;
-    private final SentenceRepository sentenceRepository;
-    private final SentenceMapper sentenceMapper;
 
     @Override
     public ResponseDto<WordInSentenceDto> createEntity(RequestWordInSentenceDto dto) {
-        List<ErrorDto> errors;
-        errors = this.wordInSentenceValidation.wordInSentenceValid(dto);
+        List<ErrorDto> errors= this.wordInSentenceValidation.wordInSentenceValid(dto);
         if (!errors.isEmpty()) {
             return ResponseDto.<WordInSentenceDto>builder()
                     .code(-3)
@@ -60,17 +55,12 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
 
     @Override
     public ResponseDto<WordInSentenceDto> getEntity(Integer entityId) {
-        return this.wordInSentenceRepository.findByWordInSentenceIdAndDeletedAtIsNull(entityId)
-                .map(wordInSentence -> {
-                    WordInSentenceDto wordInSentenceDto = this.wordInSentenceMapper.toDto(wordInSentence);
-                    wordInSentenceDto.setWord(this.wordMapper.toDto(this.wordRepository.findWordByWordId(wordInSentence.getWordId())));
-                    wordInSentenceDto.setSentence(this.sentenceMapper.toDto(this.sentenceRepository.findBySentenceId(wordInSentence.getSentenceId())));
-                    return ResponseDto.<WordInSentenceDto>builder()
+        return this.wordInSentenceRepository.findByWordInSentenceId(entityId)
+                .map(wordInSentence -> ResponseDto.<WordInSentenceDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(wordInSentenceDto)
-                            .build();
-                })
+                            .data(this.wordInSentenceMapper.toDtoWithWordsAndSentence(wordInSentence))
+                            .build())
                 .orElse(ResponseDto.<WordInSentenceDto>builder()
                         .code(-1)
                         .message(String.format("WordInSentence with %d id is not found", entityId))
@@ -78,15 +68,23 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
     }
 
     @Override
-    public ResponseDto<WordInSentenceDto> updateEntity(Integer entityId, RequestWordInSentenceDto entity) {
+    public ResponseDto<WordInSentenceDto> updateEntity(Integer entityId, RequestWordInSentenceDto dto) {
+        List<ErrorDto> errors= this.wordInSentenceValidation.wordInSentenceValid(dto);
+        if (!errors.isEmpty()) {
+            return ResponseDto.<WordInSentenceDto>builder()
+                    .code(-3)
+                    .message("Validation error")
+                    .errorList(errors)
+                    .build();
+        }
         try {
-            return this.wordInSentenceRepository.findByWordInSentenceIdAndDeletedAtIsNull(entityId)
+            return this.wordInSentenceRepository.findByWordInSentenceId(entityId)
                     .map(wordInSentence -> ResponseDto.<WordInSentenceDto>builder()
                             .success(true)
                             .message("Ok")
                             .data(this.wordInSentenceMapper.toDto(
                                     this.wordInSentenceRepository.save(
-                                            this.wordInSentenceMapper.updateWordInSentence(entity, wordInSentence)
+                                            this.wordInSentenceMapper.updateWordInSentence(dto, wordInSentence)
                                     )
                             ))
                             .build())
@@ -105,15 +103,13 @@ public class WordInSentenceService implements SimpleCrud<Integer, RequestWordInS
 
     @Override
     public ResponseDto<WordInSentenceDto> deleteEntity(Integer entityId) {
-        return this.wordInSentenceRepository.findByWordInSentenceIdAndDeletedAtIsNull(entityId)
+        return this.wordInSentenceRepository.findByWordInSentenceId(entityId)
                 .map(wordInSentence -> {
-                    wordInSentence.setDeletedAt(LocalDateTime.now());
+                    this.wordInSentenceRepository.delete(wordInSentence);
                     return ResponseDto.<WordInSentenceDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(this.wordInSentenceMapper.toDto(
-                                    this.wordInSentenceRepository.save(wordInSentence)
-                            ))
+                            .data(this.wordInSentenceMapper.toDto(wordInSentence))
                             .build();
                 })
                 .orElse(ResponseDto.<WordInSentenceDto>builder()

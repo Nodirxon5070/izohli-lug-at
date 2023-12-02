@@ -37,7 +37,8 @@ public class SecurityConfig {
                 "/swagger-ui/**",
                 "/swagger-resources/*",
                 "*.html",
-                "/api/v1/swagger.json"
+                "/api/v1/swagger.json",
+                "/word/**"
         };
         return http
                 .cors().configurationSource(corsConfigurationSource())

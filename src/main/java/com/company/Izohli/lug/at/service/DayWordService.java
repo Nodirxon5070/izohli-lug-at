@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,15 +22,11 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
     private final DayWordRepository dayWordRepository;
     private final DayWordValidation dayWordValidation;
     private final DayWordMapper dayWordMapper;
-    private final WordService wordService;
 
 
     @Override
     public ResponseDto<DayWordDto> createEntity(RequestDayWordDto dto) {
-        DayWord dayWord = this.dayWordMapper.toEntity(dto);
-        dayWord.setCreatedAt(LocalDateTime.now());
-        List<ErrorDto> errors;
-        errors = this.dayWordValidation.dayWordValid(dto);
+        List<ErrorDto> errors = this.dayWordValidation.dayWordValid(dto);
         if (!errors.isEmpty()) {
             return ResponseDto.<DayWordDto>builder()
                     .code(-3)
@@ -41,8 +38,8 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
             return ResponseDto.<DayWordDto>builder()
                     .success(true)
                     .message("Ok")
-                    .data(this.dayWordMapper.toDtoWithWord(
-                            this.dayWordRepository.save(dayWord)
+                    .data(this.dayWordMapper.toDto(
+                            this.dayWordRepository.save(this.dayWordMapper.toEntity(dto))
                     ))
                     .build();
 
@@ -56,16 +53,12 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
 
     @Override
     public ResponseDto<DayWordDto> getEntity(Integer entityId) {
-        return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
-                .map(dayWord -> {
-                    DayWordDto dto = this.dayWordMapper.toDtoWithWord(dayWord);
-                    dto.setWord(wordService.getEntity(dayWord.getWordId()).getData());
-                    return ResponseDto.<DayWordDto>builder()
+        return this.dayWordRepository.findByDayWordId(entityId)
+                .map(dayWord ->  ResponseDto.<DayWordDto>builder()
                             .success(true)
                             .message("OK")
-                            .data(dto)
-                            .build();
-                })
+                            .data(this.dayWordMapper.toDtoWithWord(dayWord))
+                            .build())
                 .orElse(ResponseDto.<DayWordDto>builder()
                         .code(-1)
                         .message(String.format("DayWord with %d id is not found", entityId))
@@ -73,15 +66,23 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
     }
 
     @Override
-    public ResponseDto<DayWordDto> updateEntity(Integer entityId, RequestDayWordDto entity) {
+    public ResponseDto<DayWordDto> updateEntity(Integer entityId, RequestDayWordDto dto) {
+        List<ErrorDto> errors = this.dayWordValidation.dayWordValid(dto);
+        if (!errors.isEmpty()) {
+            return ResponseDto.<DayWordDto>builder()
+                    .code(-3)
+                    .message("Validation error")
+                    .errorList(errors)
+                    .build();
+        }
         try {
-            return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
+            return this.dayWordRepository.findByDayWordId(entityId)
                     .map(dayWord -> ResponseDto.<DayWordDto>builder()
                             .success(true)
                             .message("OK")
                             .data(this.dayWordMapper.toDto(
                                     this.dayWordRepository.save(
-                                            this.dayWordMapper.updateDayWord(entity, dayWord)
+                                            this.dayWordMapper.updateDayWord(dto, dayWord)
                                     )
                             ))
                             .build())
@@ -99,17 +100,16 @@ public class DayWordService implements SimpleCrud<Integer, RequestDayWordDto, Da
 
     @Override
     public ResponseDto<DayWordDto> deleteEntity(Integer entityId) {
-        return this.dayWordRepository.findByDayWordIdAndDeletedAtIsNull(entityId)
+        return this.dayWordRepository.findByDayWordId(entityId)
                 .map(dayWord -> {
-                    dayWord.setDeletedAt(LocalDateTime.now());
-                    return ResponseDto.<DayWordDto>builder()
+                    this.dayWordRepository.delete(dayWord);
+                  return   ResponseDto.<DayWordDto>builder()
                             .success(true)
                             .message("OK")
-                            .data(this.dayWordMapper.toDto(
-                                    this.dayWordRepository.save(dayWord)
-                            ))
+                            .data(this.dayWordMapper.toDto(dayWord))
                             .build();
-                }).orElse(ResponseDto.<DayWordDto>builder()
+                })
+                .orElse(ResponseDto.<DayWordDto>builder()
                         .code(-1)
                         .message(String.format("DayWord with %d id is not found", entityId))
                         .build());

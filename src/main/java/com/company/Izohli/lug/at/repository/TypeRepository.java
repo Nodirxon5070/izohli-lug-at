@@ -9,13 +9,13 @@ import java.util.Optional;
 
 @Repository
 public interface TypeRepository extends JpaRepository<Type,Integer> {
-    Optional<Type> findByTypeIdAndDeletedAtIsNull(Integer typeId);
+    Optional<Type> findByTypeId(Integer typeId);
 
     @Query(
             value = "select *\n" +
                     " from type as t where type_id=?1 and deleted_at is null ",
             nativeQuery = true
     )
-    Type findTypeByTypeId(Integer id);
+    Type findTypeBYTypeId(Integer id);
 
 }

@@ -26,8 +26,6 @@ import java.util.UUID;
 public class AudioService  {
     private final AudioMapper audioMapper;
     private final AudioRepository audioRepository;
-    private final WordRepository wordRepository;
-    private final WordMapper wordMapper;
 
 
     public ResponseDto<AudioDto> uploadAudio(MultipartFile audio) {
@@ -56,8 +54,7 @@ public class AudioService  {
         return this.audioRepository.findByAudioId(audioId)
                 .map(audio1 -> {
                     try {
-                        AudioDto dto = this.audioMapper.toDto(audio1);
-                        dto.setWord(this.wordMapper.toDto(this.wordRepository.findByAudioId(audioId)));
+                        AudioDto dto = this.audioMapper.toDtoWithWord(audio1);
                         dto.setData(Files.readAllBytes(Path.of(audio1.getPath())));
                         return ResponseDto.<AudioDto>builder()
                                 .success(true)

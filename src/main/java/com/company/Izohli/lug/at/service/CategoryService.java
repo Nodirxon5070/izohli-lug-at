@@ -21,8 +21,6 @@ import java.util.stream.Collectors;
 public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, CategoryDto> {
     private final CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
-    private final WordRepository wordRepository;
-    private final WordMapper wordMapper;
 
     @Override
     public ResponseDto<CategoryDto> createEntity(RequestCategoryDto dto) {
@@ -45,16 +43,14 @@ public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, 
 
     @Override
     public ResponseDto<CategoryDto> getEntity(Integer entityId) {
-       return this.categoryRepository.findByCategoryId(entityId)
-                .map(category -> {
-                    CategoryDto categoryDto = this.categoryMapper.toDto(category);
-                    categoryDto.setWords(this.wordRepository.findAllByCategoryId(entityId).stream().map(this.wordMapper::toDto).collect(Collectors.toSet()));
-                    return ResponseDto.<CategoryDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(categoryDto)
-                            .build();
-                }).orElse(ResponseDto.<CategoryDto>builder()
+        return this.categoryRepository.findByCategoryId(entityId)
+                .map(category ->
+                        ResponseDto.<CategoryDto>builder()
+                                .success(true)
+                                .message("Ok")
+                                .data(this.categoryMapper.toDtoWithWord(category))
+                                .build()
+                ).orElse(ResponseDto.<CategoryDto>builder()
                         .code(-1)
                         .message(String.format("Category with %d id is not found", entityId))
                         .build());
@@ -86,18 +82,18 @@ public class CategoryService implements SimpleCrud<Integer, RequestCategoryDto, 
 
     @Override
     public ResponseDto<CategoryDto> deleteEntity(Integer entityId) {
-        Optional<Category> optional = this.categoryRepository.findByCategoryId(entityId);
-        if (optional.isEmpty()) {
-            return ResponseDto.<CategoryDto>builder()
-                    .code(-1)
-                    .message(String.format("Category with %d id is not found", entityId))
-                    .build();
-        }
-        Category entity = optional.get();
-        return ResponseDto.<CategoryDto>builder()
-                .success(true)
-                .message("Ok")
-                .data(this.categoryMapper.toDto(this.categoryRepository.save(entity)))
-                .build();
+        return this.categoryRepository.findByCategoryId(entityId)
+                .map(category -> {
+                    this.categoryRepository.delete(category);
+                    return ResponseDto.<CategoryDto>builder()
+                            .success(true)
+                            .message("Ok")
+                            .data(this.categoryMapper.toDto(category))
+                            .build();
+                })
+                .orElse(ResponseDto.<CategoryDto>builder()
+                        .code(-1)
+                        .message(String.format("Category with %d id is not found", entityId))
+                        .build());
     }
 }

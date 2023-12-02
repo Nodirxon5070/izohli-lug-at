@@ -10,9 +10,11 @@ import java.util.Set;
 
 @Repository
 public interface WordInSentenceRepository extends JpaRepository<WordInSentence,Integer> {
-    Optional<WordInSentence>findByWordInSentenceIdAndDeletedAtIsNull(Integer wordInSentenceId);
+    Optional<WordInSentence> findByWordInSentenceId(Integer wordInSentenceId);
 
-    Set<WordInSentence>findAllByWordIdAndDeletedAtIsNull(Integer wordId);
+    Set<WordInSentence> findAllByWordId(Integer wordId);
+
+    WordInSentence findBySentenceId(Integer sentenceId);
 
     @Query(
             value = "select *\n" +

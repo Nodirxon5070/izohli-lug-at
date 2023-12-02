@@ -10,12 +10,12 @@ import java.util.Optional;
 
 @Repository
 public interface SentenceRepository extends JpaRepository<Sentence,Integer> {
-    Optional<Sentence> findBySentenceIdAndDeletedAtIsNull(Integer sentenceId);
+    Optional<Sentence> findBySentenceId(Integer sentenceId);
 
     @Query(
             value = "select *\n" +
                     " from sentence as w where sentence_id=?1 and deleted_at is null ",
             nativeQuery = true
     )
-    Sentence findBySentenceId(Integer id);
+    Sentence findBYSentenceId(Integer id);
 }

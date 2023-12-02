@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Repository
 public interface DayWordRepository extends JpaRepository<DayWord,Integer> {
-    Optional<DayWord> findByDayWordIdAndDeletedAtIsNull(Integer dayWordId);
+    Optional<DayWord> findByDayWordId(Integer dayWordId);
 
-    Set<DayWord> findAllByWordIdAndDeletedAtIsNull(Integer wordId);
+    Set<DayWord> findAllByWordId(Integer wordId);
 }

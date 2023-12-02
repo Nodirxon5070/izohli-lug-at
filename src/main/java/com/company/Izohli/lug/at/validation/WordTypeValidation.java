@@ -16,13 +16,13 @@ public class WordTypeValidation {
     private final TypeRepository typeRepository;
     private final WordRepository wordRepository;
 
-    public List<ErrorDto> wordTypeValid(RequestWordTypeDto dto) {
+    public List<ErrorDto> wordTypeValid(RequestWordTypeDto dto){
         List<ErrorDto> errorList = new ArrayList<>();
-        if (this.typeRepository.findByTypeIdAndDeletedAtIsNull(dto.getTypeId()).isEmpty()) {
-            errorList.add(new ErrorDto("typeId", String.format("typeId with %d:id is not found!", dto.getTypeId())));
+        if (this.typeRepository.findByTypeId(dto.getTypeId()).isEmpty()){
+            errorList.add(new ErrorDto("type",String.format("%d id is not found!",dto.getTypeId())));
         }
-        if (this.wordRepository.findByWordIdAndDeletedAtIsNull(dto.getWordId()).isEmpty()) {
-            errorList.add(new ErrorDto("wordId", String.format("wordId with %d:id is not found!", dto.getWordId())));
+        if (this.wordRepository.findWordByWordId(dto.getWordId()).isEmpty()){
+            errorList.add(new ErrorDto("word",String.format("%d id is not found!",dto.getWordId())));
         }
         return errorList;
     }

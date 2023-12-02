@@ -16,7 +16,7 @@ public class NoteValidation {
 
     public List<ErrorDto> noteValid(RequestNoteDto dto) {
         List<ErrorDto> errorList = new ArrayList<>();
-        if (this.wordRepository.findByWordIdAndDeletedAtIsNull(dto.getWordId()).isEmpty()) {
+        if (this.wordRepository.findWordByWordId(dto.getWordId()).isEmpty()) {
             errorList.add(new ErrorDto("wordId", String.format("wordId with %d:id is not found!", dto.getWordId())));
         }
         return errorList;

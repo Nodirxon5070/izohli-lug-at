@@ -10,13 +10,13 @@ import java.util.Set;
 
 @Repository
 public interface WordTypeRepository extends JpaRepository<WordType,Integer> {
-    Optional<WordType>findByWordTypeIdAndDeletedAtIsNull(Integer wordTypeId);
-    Set<WordType> findByWordIdAndDeletedAtIsNull(Integer wordTypeId);
+    Optional<WordType> findByWordTypeId(Integer wordTypeId);
+    Set<WordType> findAllByWordId(Integer wordId);
 
     @Query(
             value = "select *\n" +
                     " from word_type as w where type_id=?1 and deleted_at is null ",
             nativeQuery = true
     )
-    WordType findWordTypeByTypeId(Integer id);
+    WordType findWordTypeByTypeId(Integer typeId);
 }

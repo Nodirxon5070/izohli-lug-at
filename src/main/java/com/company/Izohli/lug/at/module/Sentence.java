@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,8 +21,4 @@ public class Sentence {
 
     @OneToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private WordInSentence wordInSentences;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 }

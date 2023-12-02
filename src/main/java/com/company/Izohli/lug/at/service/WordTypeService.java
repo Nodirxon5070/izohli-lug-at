@@ -21,20 +21,16 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
     private final WordTypeRepository wordTypeRepository;
     private final WordTypeValidation wordTypeValidation;
     private final WordTypeMapper wordTypeMapper;
-    @Lazy
-    private final WordService wordService;
-    @Lazy
-    private final TypeService typeService;
 
 
     @Override
     public ResponseDto<WordTypeDto> createEntity(RequestWordTypeDto dto) {
-        List<ErrorDto> errors;
-        errors = this.wordTypeValidation.wordTypeValid(dto);
+        List<ErrorDto> errors = this.wordTypeValidation.wordTypeValid(dto);
         if (!errors.isEmpty()) {
             return ResponseDto.<WordTypeDto>builder()
                     .code(-3)
                     .message("Validation error")
+                    .errorList(errors)
                     .build();
         }
         try {
@@ -57,17 +53,12 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
 
     @Override
     public ResponseDto<WordTypeDto> getEntity(Integer entityId) {
-        return this.wordTypeRepository.findByWordTypeIdAndDeletedAtIsNull(entityId)
-                .map(wordType -> {
-                    WordTypeDto wordTypeDto = this.wordTypeMapper.toDto(wordType);
-                    wordTypeDto.setType(this.typeService.getEntity(wordType.getTypeId()).getData());
-                    wordTypeDto.setWord(this.wordService.getEntity(wordType.getWordId()).getData());
-                    return ResponseDto.<WordTypeDto>builder()
-                            .success(true)
-                            .message("OK")
-                            .data(wordTypeDto)
-                            .build();
-                })
+        return this.wordTypeRepository.findByWordTypeId(entityId)
+                .map(wordType -> ResponseDto.<WordTypeDto>builder()
+                        .success(true)
+                        .message("OK")
+                        .data(this.wordTypeMapper.toDtoWithWordAndType(wordType))
+                        .build())
                 .orElse(ResponseDto.<WordTypeDto>builder()
                         .code(-1)
                         .message(String.format("WordType with %d id is not found", entityId))
@@ -76,8 +67,16 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
 
     @Override
     public ResponseDto<WordTypeDto> updateEntity(Integer entityId, RequestWordTypeDto dto) {
+        List<ErrorDto> errors = this.wordTypeValidation.wordTypeValid(dto);
+        if (!errors.isEmpty()) {
+            return ResponseDto.<WordTypeDto>builder()
+                    .code(-3)
+                    .message("Validation error")
+                    .errorList(errors)
+                    .build();
+        }
         try {
-            return this.wordTypeRepository.findByWordTypeIdAndDeletedAtIsNull(entityId)
+            return this.wordTypeRepository.findByWordTypeId(entityId)
                     .map(wordType -> ResponseDto.<WordTypeDto>builder()
                             .success(true)
                             .message("Ok")
@@ -102,15 +101,13 @@ public class WordTypeService implements SimpleCrud<Integer, RequestWordTypeDto, 
 
     @Override
     public ResponseDto<WordTypeDto> deleteEntity(Integer entityId) {
-        return this.wordTypeRepository.findByWordTypeIdAndDeletedAtIsNull(entityId)
+        return this.wordTypeRepository.findByWordTypeId(entityId)
                 .map(wordType -> {
-                    wordType.setDeletedAt(LocalDateTime.now());
+                    this.wordTypeRepository.delete(wordType);
                     return ResponseDto.<WordTypeDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(this.wordTypeMapper.toDto(
-                                    this.wordTypeRepository.save(wordType)
-                            ))
+                            .data(this.wordTypeMapper.toDto(wordType))
                             .build();
                 })
                 .orElse(ResponseDto.<WordTypeDto>builder()

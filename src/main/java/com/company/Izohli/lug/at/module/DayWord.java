@@ -9,7 +9,6 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,10 +21,6 @@ public class DayWord {
     private Integer wordId;
 
     private Date date;
-
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JoinColumn(name = "word_id",insertable = false,updatable = false)

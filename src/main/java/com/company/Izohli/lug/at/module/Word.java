@@ -9,7 +9,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -62,8 +61,5 @@ public class Word {
             cascade = CascadeType.ALL)
     private Set<DayWord> dayWords;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 
 }

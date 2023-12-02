@@ -1,5 +1,6 @@
 package com.company.Izohli.lug.at.dto.responseDto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.util.Set;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class WordDto {
     private Integer wordId;
     private String label;
@@ -34,7 +36,4 @@ public class WordDto {
 
     private Set<DayWordDto> dayWords;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
-    private LocalDateTime deletedAt;
 }

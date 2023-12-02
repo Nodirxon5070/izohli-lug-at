@@ -18,10 +18,10 @@ public class WordInSentenceValidation {
 
     public List<ErrorDto> wordInSentenceValid(RequestWordInSentenceDto dto) {
         List<ErrorDto> errorList = new ArrayList<>();
-        if (this.wordRepository.findByWordIdAndDeletedAtIsNull(dto.getWordId()).isEmpty()) {
+        if (this.wordRepository.findWordByWordId(dto.getWordId()).isEmpty()) {
             errorList.add(new ErrorDto("wordId", String.format("wordId with %d:id is not found!", dto.getWordId())));
         }
-        if (this.sentenceRepository.findBySentenceIdAndDeletedAtIsNull(dto.getSentenceId()).isEmpty()) {
+        if (this.sentenceRepository.findBySentenceId(dto.getSentenceId()).isEmpty()) {
             errorList.add(new ErrorDto("sentenceId", String.format("sentenceId with %d:id is not found!", dto.getSentenceId())));
         }
         return errorList;

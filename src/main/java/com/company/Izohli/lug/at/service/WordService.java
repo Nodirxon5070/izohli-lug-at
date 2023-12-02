@@ -10,15 +10,12 @@ import com.company.Izohli.lug.at.util.SimpleCrud;
 import com.company.Izohli.lug.at.util.WordRepositoryImpl;
 import com.company.Izohli.lug.at.validation.WordValidation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -27,36 +24,11 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
     private final WordMapper wordMapper;
     private final WordValidation wordValidation;
     private final WordRepositoryImpl wordRepositoryimpl;
-    @Lazy
-    private final AudioMapper audioMapper;
-    @Lazy
-    private final AudioRepository audioRepository;
-    @Lazy
-    private final CategoryRepository categoryRepository;
-    @Lazy
-    private final CategoryMapper categoryMapper;
-    @Lazy
-    private final WordTypeRepository wordTypeRepository;
-    @Lazy
-    private final WordTypeMapper wordTypeMapper;
-    @Lazy
-    private final NoteRepository noteRepository;
-    @Lazy
-    private final NoteMapper noteMapper;
-    @Lazy
-    private final WordInSentenceRepository wordInSentenceRepository;
-    @Lazy
-    private final WordInSentenceMapper wordInSentenceMapper;
-    @Lazy
-    private final DayWordMapper dayWordMapper;
-    @Lazy
-    private final DayWordRepository dayWordRepository;
 
 
     @Override
     public ResponseDto<WordDto> createEntity(RequestWordDto dto) {
-        List<ErrorDto> errors;
-        errors = this.wordValidation.wordValid(dto);
+        List<ErrorDto> errors = this.wordValidation.wordValid(dto);
         if (!errors.isEmpty()) {
             return ResponseDto.<WordDto>builder()
                     .code(-3)
@@ -85,15 +57,12 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
 
     @Override
     public ResponseDto<WordDto> getEntity(Integer entityId) {
-        return this.wordRepository.findByWordIdAndDeletedAtIsNull(entityId)
-                .map(word -> {
-                    WordDto wordDto = this.wordMapper.toDto(word);
-                    return ResponseDto.<WordDto>builder()
-                            .success(true)
-                            .message("Ok")
-                            .data(wordDto)
-                            .build();
-                })
+        return this.wordRepository.findWordByWordId(entityId)
+                .map(word -> ResponseDto.<WordDto>builder()
+                        .success(true)
+                        .message("Ok")
+                        .data(this.wordMapper.toDtoWithAll(word))
+                        .build())
                 .orElse(ResponseDto.<WordDto>builder()
                         .code(-1)
                         .message(String.format("Word with %d id is not found", entityId))
@@ -101,15 +70,23 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
     }
 
     @Override
-    public ResponseDto<WordDto> updateEntity(Integer entityId, RequestWordDto entity) {
+    public ResponseDto<WordDto> updateEntity(Integer entityId, RequestWordDto dto) {
+        List<ErrorDto> errors = this.wordValidation.wordValid(dto);
+        if (!errors.isEmpty()) {
+            return ResponseDto.<WordDto>builder()
+                    .code(-3)
+                    .message("Validation error")
+                    .errorList(errors)
+                    .build();
+        }
         try {
-            return this.wordRepository.findByWordIdAndDeletedAtIsNull(entityId)
+            return this.wordRepository.findWordByWordId(entityId)
                     .map(word -> ResponseDto.<WordDto>builder()
                             .success(true)
                             .message("Ok")
                             .data(this.wordMapper.toDto(
                                     this.wordRepository.save(
-                                            this.wordMapper.updateWord(entity, word)
+                                            this.wordMapper.updateWord(dto, word)
                                     )
                             ))
                             .build())
@@ -128,15 +105,13 @@ public class WordService implements SimpleCrud<Integer, RequestWordDto, WordDto>
 
     @Override
     public ResponseDto<WordDto> deleteEntity(Integer entityId) {
-        return this.wordRepository.findByWordIdAndDeletedAtIsNull(entityId)
+        return this.wordRepository.findWordByWordId(entityId)
                 .map(word -> {
-                    word.setDeletedAt(LocalDateTime.now());
+                    this.wordRepository.delete(word);
                     return ResponseDto.<WordDto>builder()
                             .success(true)
                             .message("Ok")
-                            .data(this.wordMapper.toDto(
-                                    this.wordRepository.save(word)
-                            ))
+                            .data(this.wordMapper.toDto(word))
                             .build();
                 })
                 .orElse(ResponseDto.<WordDto>builder()
