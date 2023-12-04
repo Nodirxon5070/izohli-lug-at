@@ -2,6 +2,7 @@ package com.company.Izohli.lug.at.controller;
 
 import com.company.Izohli.lug.at.dto.ResponseDto;
 import com.company.Izohli.lug.at.dto.requestDto.LoginDto;
+import com.company.Izohli.lug.at.dto.requestDto.RequestRegisterConfirmDto;
 import com.company.Izohli.lug.at.dto.requestDto.RequestUserDto;
 import com.company.Izohli.lug.at.dto.responseDto.TokenResponseDto;
 import com.company.Izohli.lug.at.dto.responseDto.UserDto;
@@ -13,10 +14,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.company.Izohli.lug.at.constants.SwaggerConstants.*;
 import static com.company.Izohli.lug.at.dto.SimpleResponseDto.convertStatusCodeByData;
@@ -105,6 +103,21 @@ public class UserController {
     @PostMapping(value = "/login")
     public ResponseEntity<ResponseDto<TokenResponseDto>> login(@RequestBody LoginDto dto) {
         return convertStatusCodeByData(this.userService.login(dto));
+    }
+
+    @PostMapping(value = "/register-confirm")
+    public ResponseEntity<ResponseDto<TokenResponseDto>> registerConfirm(@RequestBody RequestRegisterConfirmDto dto){
+        return convertStatusCodeByData(this.userService.registerConfirm(dto));
+    }
+
+    @PostMapping(value = "/logout")
+    public ResponseEntity<ResponseDto<UserDto>> logout(@RequestParam String username){
+        return convertStatusCodeByData(this.userService.logout(username));
+    }
+
+    @GetMapping(value = "/refresh-token")
+    public ResponseEntity<ResponseDto<TokenResponseDto>> refreshToken(@RequestParam String username){
+        return convertStatusCodeByData(this.userService.refreshToken(username));
     }
 
 

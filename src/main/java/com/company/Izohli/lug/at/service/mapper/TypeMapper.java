@@ -27,12 +27,6 @@ public abstract class TypeMapper {
     @Mapping(target = "wordType",ignore = true)
     public abstract TypeDto toDto(Type type);
 
-    public void view(){
-        Type type = new Type();
-        TypeDto dto = new TypeDto();
-        dto.setWordType(this.wordTypeMapper.toDto(this.wordTypeRepository.findWordTypeByTypeId(type.getTypeId())));
-    }
-
     @Mapping(target = "wordType",expression = "java(this.wordTypeMapper.toDto(this.wordTypeRepository.findWordTypeByTypeId(type.getTypeId())))")
     public abstract TypeDto toDtoWithWordType(Type type);
 

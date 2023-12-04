@@ -38,13 +38,6 @@ public abstract class WordInSentenceMapper {
     @Mapping(target = "sentence", ignore = true)
     public abstract WordInSentenceDto toDto(WordInSentence entity);
 
-    public void view() {
-        WordInSentence wordInSentence = new WordInSentence();
-        WordInSentenceDto dto = new WordInSentenceDto();
-        dto.setSentence(this.sentenceMapper.toDto(this.sentenceRepository.findBYSentenceId(wordInSentence.getSentenceId())));
-        dto.setWord(this.wordMapper.toDto(this.wordRepository.findWordBYWordId(wordInSentence.getWordId())));
-    }
-
     @Mapping(target = "sentence", expression = "java(this.sentenceMapper.toDto(this.sentenceRepository.findBYSentenceId(entity.getSentenceId())))")
     @Mapping(target = "word", expression = "java(this.wordMapper.toDto(this.wordRepository.findWordBYWordId(entity.getWordId())))")
     public abstract WordInSentenceDto toDtoWithWordsAndSentence(WordInSentence entity);

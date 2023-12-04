@@ -26,14 +26,6 @@ public abstract class CategoryMapper {
     @Mapping(target = "words",ignore = true)
     public abstract CategoryDto toDto(Category category);
 
-
-    private void view(){
-        CategoryDto dto = new CategoryDto();
-        Category category = new Category();
-//        dto.setWords();
-    }
-
-
     @Mapping(target = "words",expression = "java(this.wordRepository.findAllByCategoryId(category.getCategoryId()).stream().map(this.wordMapper::toDto).collect(Collectors.toSet()))")
     public abstract CategoryDto toDtoWithWord(Category category);
 

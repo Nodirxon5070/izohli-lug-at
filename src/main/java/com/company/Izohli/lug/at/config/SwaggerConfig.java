@@ -13,7 +13,7 @@ public class SwaggerConfig {
 
     @Bean
     public GroupedOpenApi groupedByUserAPI(){
-        String[] array = new String[]{"/users/register","/users/login"};
+        String[] array = new String[]{"/users/register","/users/login","/users/register-confirm","/users/logout","/users/refresh-token"};
         return GroupedOpenApi.builder()
                 .group("User")
                 .pathsToMatch(array)

@@ -70,17 +70,6 @@ public abstract class WordMapper {
     @Mapping(target = "dayWords",ignore = true)
     public abstract WordDto toDto(Word word);
 
-
-    public void view(){
-        WordDto wordDto = new WordDto();
-        Word word = new Word();
-        wordDto.setAudio(this.audioMapper.toDto(this.audioRepository.findBYAudioId(word.getAudioId())));
-        wordDto.setCategory(this.categoryMapper.toDto(this.categoryRepository.findBYCategoryId(word.getCategoryId())));
-        wordDto.setWordType(this.wordTypeRepository.findAllByWordId(word.getWordId()).stream().map(wordTypeMapper::toDto).collect(Collectors.toSet()));
-
-    }
-
-
     @Mapping(target = "audio",expression = "java(this.audioMapper.toDto(this.audioRepository.findBYAudioId(word.getAudioId())))")
     @Mapping(target = "category",expression = "java(this.categoryMapper.toDto(this.categoryRepository.findBYCategoryId(word.getCategoryId())))")
     @Mapping(target = "wordType",expression = "java(this.wordTypeRepository.findAllByWordId(word.getWordId()).stream().map(this.wordTypeMapper::toDto).collect(Collectors.toSet()))")

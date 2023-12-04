@@ -24,13 +24,6 @@ public abstract class AudioMapper {
     @Mapping(target = "word",ignore = true)
     public abstract AudioDto toDto(Audio audio);
 
-
-    public void view(){
-        Audio audio = new Audio();
-        AudioDto audioDto = new AudioDto();
-        audioDto.setWord(this.wordMapper.toDto(this.wordRepository.findByAudioId(audio.getAudioId())));
-    }
-
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,resultType = Audio.class)
     public abstract Audio updateAudio(RequestAudioDto dto, @MappingTarget Audio audio);
 

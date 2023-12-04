@@ -28,13 +28,6 @@ public abstract class NoteMapper {
     @Mapping(target = "word",ignore = true)
     public abstract NoteDto toDto(Note note);
 
-
-    public void view(){
-        Note note = new Note();
-        NoteDto dto = new NoteDto();
-        dto.setWord(this.wordMapper.toDto(this.wordRepository.findWordBYWordId(note.getWordId())));
-    }
-
     @Mapping(target = "word",expression = "java(this.wordMapper.toDto(this.wordRepository.findWordBYWordId(note.getWordId())))")
     public abstract NoteDto toDtoWithWord(Note note);
 

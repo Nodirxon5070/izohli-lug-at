@@ -1,6 +1,6 @@
 package com.company.Izohli.lug.at.security;
 
-import com.company.Izohli.lug.at.repository.UserSessionRepository;
+import com.company.Izohli.lug.at.repository.UserAccessSessionRepository;
 import io.micrometer.common.util.StringUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +20,7 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final UserSessionRepository userSessionRepository;
+    private final UserAccessSessionRepository userAccessSessionRepository;
 
     @Override
     protected void doFilterInternal(
@@ -31,7 +31,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if (!StringUtils.isBlank(authentication) && authentication.startsWith("Bearer ")) {
             String token = authentication.substring(7);
             if (jwtUtil.isValid(token)) {
-                this.userSessionRepository.findById(jwtUtil.getClaims("sub", token, String.class))
+                this.userAccessSessionRepository.findById(jwtUtil.getClaims("sub", token, String.class))
                         .ifPresent(userSession -> {
                             SecurityContextHolder.getContext()
                                     .setAuthentication(new UsernamePasswordAuthenticationToken(

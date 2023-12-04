@@ -14,10 +14,17 @@ public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
-    @Mapping(target = "enabled", expression = "java(true)")
+
+
+
+
+    @Mapping(target = "code",expression = "java(String.valueOf(0000))")
+    @Mapping(target = "enabled", expression = "java(false)")
     @Mapping(target = "password", expression = "java(this.passwordEncoder.encode(dto.getPassword()))")
     public abstract User toEntity(RequestUserDto dto);
 
+    public abstract User toEntityResponseDto(UserDto dto);
 
-    public abstract UserDto toDto(User saveUser);
+
+    public abstract UserDto toDto(User user);
 }

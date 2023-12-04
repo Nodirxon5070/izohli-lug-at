@@ -13,7 +13,7 @@ import org.springframework.data.redis.core.RedisHash;
 @NoArgsConstructor
 @AllArgsConstructor
 @RedisHash(timeToLive = 60 * 60 * 24)
-public class UserSession {
+public class UserAccessSession {
 
     @Id
     private String sessionId;

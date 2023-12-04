@@ -22,6 +22,7 @@ public class User {
     private String username;
     private String password;
     private Boolean enabled;
+    private String code;
     private LocalDateTime createdAt;
 
 
